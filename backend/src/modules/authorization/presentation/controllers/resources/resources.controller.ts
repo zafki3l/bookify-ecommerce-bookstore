@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateResourceDto } from '../../dto/resources/create-resource.dto';
 import { CreateResourceCommand } from '../../../application/commands/resources/create-resource.command';
@@ -6,6 +14,9 @@ import { ResourceResponseDto } from '../../dto/resources/resource-response.dto';
 import { FindResourcesQuery } from '../../../application/queries/resources/find-resources.query';
 import ExceptionHandler from '../../../../../shared/exceptions/exception.handler';
 import { FindOneResourceQuery } from '../../../application/queries/resources/find-one-resource.query';
+import { UpdateResourceCommand } from '../../../application/commands/resources/update-resource.command';
+import { UpdateResourceDto } from '../../dto/resources/update-resource.dto';
+import { DeleteResourceCommand } from '../../../application/commands/resources/delete-resource.command';
 
 @Controller('resources')
 export class ResourcesController {
@@ -34,14 +45,41 @@ export class ResourcesController {
 
   @Post()
   async create(
-    @Body() request: CreateResourceDto,
+    @Body() createResource: CreateResourceDto,
   ): Promise<ResourceResponseDto> {
     try {
       const resource = await this.commandBus.execute(
-        new CreateResourceCommand(request.id, request.name),
+        new CreateResourceCommand(createResource.id, createResource.name),
       );
 
       return new ResourceResponseDto(resource.getId(), resource.getName());
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateResource: UpdateResourceDto,
+  ): Promise<ResourceResponseDto> {
+    try {
+      const resource = await this.commandBus.execute(
+        new UpdateResourceCommand(id, updateResource.name),
+      );
+
+      return new ResourceResponseDto(resource.getId(), resource.getName());
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    try {
+      await this.commandBus.execute(new DeleteResourceCommand(id));
+
+      return 'deleted';
     } catch (error) {
       ExceptionHandler.handle(error);
     }

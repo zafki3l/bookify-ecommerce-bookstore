@@ -2,16 +2,15 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { FindResourcesQuery } from './find-resources.query';
 import { Inject } from '@nestjs/common';
 import {
-  type IResourceRepository,
-  RESOURCE_REPOSITORY,
-} from '../../../domain/repositories/resource.repository.interface';
-import { Resource } from '../../../domain/entities/resource.entity';
+  type IResourcesQueryRepository,
+  RESOURCES_QUERY_REPOSITORY,
+} from '../../../domain/repositories/resources/resource-query.repository.interface';
 
 @QueryHandler(FindResourcesQuery)
 export class FindResourcesHandler implements IQueryHandler<FindResourcesQuery> {
   constructor(
-    @Inject(RESOURCE_REPOSITORY)
-    private readonly repository: IResourceRepository,
+    @Inject(RESOURCES_QUERY_REPOSITORY)
+    private readonly repository: IResourcesQueryRepository,
   ) {}
 
   async execute(

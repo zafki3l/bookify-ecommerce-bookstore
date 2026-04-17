@@ -6,8 +6,8 @@ export class Resource {
   private static readonly MAX_LENGTH = 50;
 
   private constructor(
-    private readonly id: string,
-    private readonly name: string,
+    private id: string,
+    private name: string,
   ) {}
 
   static create(id: string, name: string): Resource {
@@ -15,11 +15,11 @@ export class Resource {
       throw new ResourceIdEmptyException();
     }
 
-    if (id.length > this.MAX_LENGTH) {
+    if (id.length > Resource.MAX_LENGTH) {
       throw new ResourceIdTooLongException();
     }
 
-    if (name.length > this.MAX_LENGTH) {
+    if (name.length > Resource.MAX_LENGTH) {
       throw new ResourceNameTooLongException();
     }
 
@@ -32,5 +32,13 @@ export class Resource {
 
   getName(): string {
     return this.name;
+  }
+
+  updateName(name: string) {
+    if (name.length > Resource.MAX_LENGTH) {
+      throw new ResourceNameTooLongException();
+    }
+
+    this.name = name;
   }
 }
