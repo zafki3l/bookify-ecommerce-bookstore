@@ -7,6 +7,7 @@ import { TypeOrmResourceRepository } from './infrastructure/repositories/typeorm
 import { CreateResourceHandler } from './application/commands/resources/create-resource.handler';
 import { ResourceTypeOrm } from './infrastructure/entities/resource.entity';
 import { FindResourcesHandler } from './application/queries/resources/find-resource.handler';
+import { FineOneResourceHandler } from './application/queries/resources/find-one-resource.handler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ResourceTypeOrm])],
@@ -14,6 +15,7 @@ import { FindResourcesHandler } from './application/queries/resources/find-resou
   providers: [
     CreateResourceHandler,
     FindResourcesHandler,
+    FineOneResourceHandler,
     {
       provide: RESOURCE_REPOSITORY,
       useClass: TypeOrmResourceRepository,

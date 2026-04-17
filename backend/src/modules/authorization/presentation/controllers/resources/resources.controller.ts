@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateResourceDto } from '../../dto/resources/create-resource.dto';
 import { CreateResourceCommand } from '../../../application/commands/resources/create-resource.command';
 import { ResourceResponseDto } from '../../dto/resources/resource-response.dto';
 import { FindResourcesQuery } from '../../../application/queries/resources/find-resources.query';
 import ExceptionHandler from '../../../../../shared/exceptions/exception.handler';
+import { FindOneResourceQuery } from '../../../application/queries/resources/find-one-resource.query';
 
 @Controller('resources')
 export class ResourcesController {
@@ -22,6 +23,13 @@ export class ResourcesController {
           (resource) => new ResourceResponseDto(resource.id, resource.name),
         )
       : [];
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<ResourceResponseDto | {}> {
+    const resource = await this.queryBus.execute(new FindOneResourceQuery(id));
+
+    return resource ? new ResourceResponseDto(resource.id, resource.name) : {};
   }
 
   @Post()
