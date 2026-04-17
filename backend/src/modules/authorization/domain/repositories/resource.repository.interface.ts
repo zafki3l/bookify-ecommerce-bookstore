@@ -1,6 +1,8 @@
-import { Resource } from '../../infrastructure/entities/resource.entity';
+import { Resource } from '../entities/resource.entity';
 
 export interface IResourceRepository {
+  find(): Promise<{ id: string; name: string }[]>;
+
   save(resource: Resource): Promise<void>;
 }
 

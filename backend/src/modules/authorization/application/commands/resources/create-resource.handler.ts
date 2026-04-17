@@ -5,7 +5,7 @@ import {
   type IResourceRepository,
 } from '../../../domain/repositories/resource.repository.interface';
 import { Inject } from '@nestjs/common';
-import { Resource } from '../../../infrastructure/entities/resource.entity';
+import { Resource } from '../../../domain/entities/resource.entity';
 
 @CommandHandler(CreateResourceCommand)
 export class CreateResourceHandler implements ICommandHandler<CreateResourceCommand> {
@@ -14,10 +14,9 @@ export class CreateResourceHandler implements ICommandHandler<CreateResourceComm
     private readonly repository: IResourceRepository,
   ) {}
 
-  async execute(command: CreateResourceCommand) {
-    const resource = new Resource();
-    resource.id = command.id;
-    resource.name = command.name;
+  async execute(command: CreateResourceCommand): Promise<Resource> {
+    const resource = Resource.create(command.id, command.name);
+
     await this.repository.save(resource);
 
     return resource;
