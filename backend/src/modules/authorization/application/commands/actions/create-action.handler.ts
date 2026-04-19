@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandBus, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateActionCommand } from './create-action.command';
 import { Action } from '../../../domain/entities/action.entity';
 import { Inject } from '@nestjs/common';
@@ -11,6 +11,7 @@ import {
   ACTIONS_COMMAND_REPOSITORY,
   type IActionsCommandRepository,
 } from '../../../domain/repositories/actions/actions-command.repository.interface';
+import { WriteAuditLogCommand } from '../../../../audit-log/application/commands/write-audit-log.command';
 
 @CommandHandler(CreateActionCommand)
 export class CreateActionHandler implements ICommandHandler<CreateActionCommand> {
@@ -20,10 +21,13 @@ export class CreateActionHandler implements ICommandHandler<CreateActionCommand>
 
     @Inject(ACTION_EXISTS_CHECKER)
     private readonly actionExistsChecker: IActionExistsChecker,
+
+    private readonly commandBus: CommandBus,
   ) {}
 
   async execute(command: CreateActionCommand) {
     const action = Action.create(command.name);
+    const userId = '123';
 
     const isExist = await this.actionExistsChecker.isExist(action.getId());
     if (isExist) {
@@ -31,6 +35,16 @@ export class CreateActionHandler implements ICommandHandler<CreateActionCommand>
     }
 
     await this.repository.save(action);
+
+    await this.commandBus.execute(
+      new WriteAuditLogCommand(
+        'CREATE_ACTION',
+        'AUTHORIZATION',
+        'actions',
+        userId,
+        null,
+      ),
+    );
 
     return action;
   }
