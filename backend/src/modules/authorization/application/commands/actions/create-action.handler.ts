@@ -12,6 +12,10 @@ import {
   type IActionsCommandRepository,
 } from '../../../domain/repositories/actions/actions-command.repository.interface';
 import { WriteAuditLogCommand } from '../../../../audit-log/application/commands/write-audit-log.command';
+import {
+  CACHE_REPOSITORY,
+  type ICacheRepository,
+} from '../../../../../shared/cache/domain/cache.repository.interface';
 
 @CommandHandler(CreateActionCommand)
 export class CreateActionHandler implements ICommandHandler<CreateActionCommand> {
@@ -21,6 +25,9 @@ export class CreateActionHandler implements ICommandHandler<CreateActionCommand>
 
     @Inject(ACTION_EXISTS_CHECKER)
     private readonly actionExistsChecker: IActionExistsChecker,
+
+    @Inject(CACHE_REPOSITORY)
+    private readonly cache: ICacheRepository,
 
     private readonly commandBus: CommandBus,
   ) {}
@@ -35,6 +42,7 @@ export class CreateActionHandler implements ICommandHandler<CreateActionCommand>
     }
 
     await this.repository.save(action);
+    await this.cache.del('actions:{}');
 
     await this.commandBus.execute(
       new WriteAuditLogCommand(
