@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateActionDto } from '../../dto/actions/create-action.dto';
-import ExceptionHandler from '../../../../../shared/exceptions/exception.handler';
+import ExceptionHandler from '../../../../../shared/exception/exception.handler';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateActionCommand } from '../../../application/commands/actions/create-action.command';
 import { ActionResponseDto } from '../../dto/actions/action-response.dto';

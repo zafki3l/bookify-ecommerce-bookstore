@@ -1,5 +1,5 @@
-import { DomainException } from '../../../../../shared/exceptions/domain.exception';
-import { ErrorCode } from '../../../../../shared/exceptions/error.code';
+import { DomainException } from '../../../../../shared/exception/domain.exception';
+import { ErrorCode } from '../../../../../shared/exception/error.code';
 
 export class ResourceExistsException extends DomainException {
   constructor(id: string) {
