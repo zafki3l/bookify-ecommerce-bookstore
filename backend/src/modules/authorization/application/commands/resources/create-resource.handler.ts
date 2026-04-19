@@ -38,8 +38,8 @@ export class CreateResourceHandler implements ICommandHandler<CreateResourceComm
     }
 
     await this.repository.save(resource);
-
     await this.cache.del('resources:{}');
+
     return resource;
   }
 }
