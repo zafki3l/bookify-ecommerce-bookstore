@@ -23,7 +23,7 @@ export class AuditLogTypeOrm {
   performedBy!: string;
 
   @Column({ type: 'json', nullable: true })
-  metadata!: Record<string, any>;
+  metadata!: Record<string, any> | null;
 
   @CreateDateColumn()
   createdAt!: Date;
