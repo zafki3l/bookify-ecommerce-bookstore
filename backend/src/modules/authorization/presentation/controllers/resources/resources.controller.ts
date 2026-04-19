@@ -12,7 +12,7 @@ import { CreateResourceDto } from '../../dto/resources/create-resource.dto';
 import { CreateResourceCommand } from '../../../application/commands/resources/create-resource.command';
 import { ResourceResponseDto } from '../../dto/resources/resource-response.dto';
 import { FindResourcesQuery } from '../../../application/queries/resources/find-resources.query';
-import ExceptionHandler from '../../../../../shared/exceptions/exception.handler';
+import ExceptionHandler from '../../../../../shared/exception/exception.handler';
 import { FindOneResourceQuery } from '../../../application/queries/resources/find-one-resource.query';
 import { UpdateResourceCommand } from '../../../application/commands/resources/update-resource.command';
 import { UpdateResourceDto } from '../../dto/resources/update-resource.dto';
