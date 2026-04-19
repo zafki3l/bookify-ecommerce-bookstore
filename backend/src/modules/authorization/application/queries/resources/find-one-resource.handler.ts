@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import {
   type IResourcesQueryRepository,
   RESOURCES_QUERY_REPOSITORY,
-} from '../../../domain/repositories/resources/resource-query.repository.interface';
+} from '../../../domain/repositories/resources/resources-query.repository.interface';
 import {
   CACHE_REPOSITORY,
   type ICacheRepository,

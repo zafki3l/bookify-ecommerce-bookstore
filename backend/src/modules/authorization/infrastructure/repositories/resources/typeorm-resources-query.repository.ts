@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ResourceTypeOrm } from '../../entities/resource.entity';
-import { IResourcesQueryRepository } from '../../../domain/repositories/resources/resource-query.repository.interface';
+import { IResourcesQueryRepository } from '../../../domain/repositories/resources/resources-query.repository.interface';
 
 @Injectable()
 export class TypeOrmResourcesQueryRepository implements IResourcesQueryRepository {

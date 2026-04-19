@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { CreateResourceHandler } from '../../application/commands/resources/create-resource.handler';
 import { UpdateResourceHandler } from '../../application/commands/resources/update-resource.handler';
 import { DeleteResourceHandler } from '../../application/commands/resources/delete-resource.handler';
-import { FindResourcesHandler } from '../../application/queries/resources/find-resource.handler';
+import { FindResourcesHandler } from '../../application/queries/resources/find-resources.handler';
 import { FineOneResourceHandler } from '../../application/queries/resources/find-one-resource.handler';
-import { RESOURCES_COMMAND_REPOSITORY } from '../../domain/repositories/resources/resource-command.repository.interface';
+import { RESOURCES_COMMAND_REPOSITORY } from '../../domain/repositories/resources/resources-command.repository.interface';
 import { TypeOrmResourcesCommandRepository } from '../repositories/resources/typeorm-resources-command.repository';
-import { RESOURCES_QUERY_REPOSITORY } from '../../domain/repositories/resources/resource-query.repository.interface';
+import { RESOURCES_QUERY_REPOSITORY } from '../../domain/repositories/resources/resources-query.repository.interface';
 import { TypeOrmResourcesQueryRepository } from '../repositories/resources/typeorm-resources-query.repository';
 import { RESOURCE_EXISTS_CHECKER } from '../../domain/services/resources/resource-exists-checker.service';
 import { ResourceExistsChecker } from '../services/resources/resource-exists-checker.service';
@@ -15,11 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ResourceTypeOrm } from '../entities/resource.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ResourceTypeOrm]),
-    SharedCacheModule,
-    SharedCacheModule,
-  ],
+  imports: [TypeOrmModule.forFeature([ResourceTypeOrm]), SharedCacheModule],
   providers: [
     CreateResourceHandler,
     UpdateResourceHandler,

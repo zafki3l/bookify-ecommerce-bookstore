@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ResourceTypeOrm } from '../../entities/resource.entity';
-import { IResourcesCommandRepository } from '../../../domain/repositories/resources/resource-command.repository.interface';
+import { IResourcesCommandRepository } from '../../../domain/repositories/resources/resources-command.repository.interface';
 import { Resource } from '../../../domain/entities/resource.entity';
 import { ResourcesMapper } from '../../mappers/resources.mapper';
 import { ResourceNotFoundException } from '../../../domain/exceptions/resources/resource-not-found.exception';
