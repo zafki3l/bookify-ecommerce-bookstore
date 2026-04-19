@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CacheModule } from '@nestjs/cache-manager';
+import { SharedCacheModule } from './shared/cache/cache.module';
 import Keyv from 'keyv';
 import KeyvRedis from '@keyv/redis';
 
@@ -49,6 +50,7 @@ import KeyvRedis from '@keyv/redis';
     UsersModule,
     AuthorizationModule,
     AuthenticationModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],

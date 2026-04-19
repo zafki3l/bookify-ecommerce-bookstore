@@ -12,9 +12,10 @@ import { RESOURCES_QUERY_REPOSITORY } from './domain/repositories/resources/reso
 import { TypeOrmResourcesQueryRepository } from './infrastructure/repositories/resources/typeorm-resources-query.repository';
 import { UpdateResourceHandler } from './application/commands/resources/update-resource.handler';
 import { DeleteResourceHandler } from './application/commands/resources/delete-resource.handler';
+import { SharedCacheModule } from '../../shared/cache/cache.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ResourceTypeOrm])],
+  imports: [TypeOrmModule.forFeature([ResourceTypeOrm]), SharedCacheModule],
   controllers: [ResourcesController, ActionsController],
   providers: [
     CreateResourceHandler,
