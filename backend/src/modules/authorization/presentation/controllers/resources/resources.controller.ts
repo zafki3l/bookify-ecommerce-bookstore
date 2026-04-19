@@ -49,7 +49,7 @@ export class ResourcesController {
   ): Promise<ResourceResponseDto> {
     try {
       const resource = await this.commandBus.execute(
-        new CreateResourceCommand(createResource.id, createResource.name),
+        new CreateResourceCommand(createResource.name),
       );
 
       return new ResourceResponseDto(resource.getId(), resource.getName());

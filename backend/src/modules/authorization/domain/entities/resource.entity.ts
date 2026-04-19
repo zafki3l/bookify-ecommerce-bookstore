@@ -1,5 +1,4 @@
 import { ResourceIdEmptyException } from '../exceptions/resources/resource-id-empty.exception';
-import { ResourceIdTooLongException } from '../exceptions/resources/resource-id-too-long.exception';
 import { ResourceNameTooLongException } from '../exceptions/resources/resource-name-too-long.exception';
 
 export class Resource {
@@ -10,20 +9,22 @@ export class Resource {
     private name: string,
   ) {}
 
-  static create(id: string, name: string): Resource {
-    if (!id || id.trim() === '') {
-      throw new ResourceIdEmptyException();
-    }
-
-    if (id.length > Resource.MAX_LENGTH) {
-      throw new ResourceIdTooLongException();
-    }
-
-    if (name.length > Resource.MAX_LENGTH) {
+  static create(name: string): Resource {
+    if (name.length > this.MAX_LENGTH) {
       throw new ResourceNameTooLongException();
     }
 
-    return new Resource(id.toLowerCase(), name);
+    const normalized = name.trim().toLowerCase();
+    const formattedName =
+      normalized.charAt(0).toUpperCase() + normalized.slice(1);
+
+    const id = normalized;
+
+    if (!id) {
+      throw new ResourceIdEmptyException();
+    }
+
+    return new Resource(id, formattedName);
   }
 
   getId(): string {

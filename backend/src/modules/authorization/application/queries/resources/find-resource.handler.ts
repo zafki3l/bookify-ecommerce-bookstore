@@ -12,11 +12,12 @@ import {
 
 @QueryHandler(FindResourcesQuery)
 export class FindResourcesHandler implements IQueryHandler<FindResourcesQuery> {
-  private readonly TTL = 60 * 1000;
+  private readonly TTL = 60 * 60 * 1000;
 
   constructor(
     @Inject(RESOURCES_QUERY_REPOSITORY)
     private readonly repository: IResourcesQueryRepository,
+
     @Inject(CACHE_REPOSITORY)
     private readonly cache: ICacheRepository,
   ) {}

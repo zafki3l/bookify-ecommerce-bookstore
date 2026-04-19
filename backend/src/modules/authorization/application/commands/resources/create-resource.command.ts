@@ -1,6 +1,3 @@
 export class CreateResourceCommand {
-  constructor(
-    public readonly id: string,
-    public readonly name: string,
-  ) {}
+  constructor(public readonly name: string) {}
 }
