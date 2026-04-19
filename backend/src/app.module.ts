@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CacheModule } from '@nestjs/cache-manager';
 import { SharedCacheModule } from './shared/cache/cache.module';
+import { AuditLogModule } from './modules/audit-log/audit-log.module';
 import Keyv from 'keyv';
 import KeyvRedis from '@keyv/redis';
 
@@ -51,6 +52,7 @@ import KeyvRedis from '@keyv/redis';
     AuthorizationModule,
     AuthenticationModule,
     SharedCacheModule,
+    AuditLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

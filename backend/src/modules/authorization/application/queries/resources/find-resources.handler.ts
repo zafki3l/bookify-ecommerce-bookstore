@@ -30,7 +30,9 @@ export class FindResourcesHandler implements IQueryHandler<FindResourcesQuery> {
     const cached =
       await this.cache.get<{ id: string; name: string }[]>(cacheKey);
 
-    if (cached) return cached;
+    if (cached) {
+      return cached;
+    }
 
     const resources = await this.repository.find();
     await this.cache.set(cacheKey, resources, this.TTL);
