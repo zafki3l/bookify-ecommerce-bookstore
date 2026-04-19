@@ -10,6 +10,11 @@ import {
   CACHE_REPOSITORY,
   type ICacheRepository,
 } from '../../../../../shared/cache/domain/cache.repository.interface';
+import {
+  type IResourceExistsChecker,
+  RESOURCE_EXISTS_CHECKER,
+} from '../../../domain/services/resources/resource-exists-checker.service';
+import { ResourceExistsException } from '../../../domain/exceptions/resources/resource-exists.exception';
 
 @CommandHandler(CreateResourceCommand)
 export class CreateResourceHandler implements ICommandHandler<CreateResourceCommand> {
@@ -19,10 +24,18 @@ export class CreateResourceHandler implements ICommandHandler<CreateResourceComm
 
     @Inject(CACHE_REPOSITORY)
     private readonly cache: ICacheRepository,
+
+    @Inject(RESOURCE_EXISTS_CHECKER)
+    private readonly resourceExistsChecker: IResourceExistsChecker,
   ) {}
 
   async execute(command: CreateResourceCommand): Promise<Resource> {
     const resource = Resource.create(command.name);
+
+    const isExist = await this.resourceExistsChecker.isExist(resource.getId());
+    if (isExist) {
+      throw new ResourceExistsException(resource.getId());
+    }
 
     await this.repository.save(resource);
 
