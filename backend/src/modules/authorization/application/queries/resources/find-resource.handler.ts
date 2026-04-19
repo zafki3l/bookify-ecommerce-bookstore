@@ -5,8 +5,10 @@ import {
   type IResourcesQueryRepository,
   RESOURCES_QUERY_REPOSITORY,
 } from '../../../domain/repositories/resources/resource-query.repository.interface';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { type Cache } from 'cache-manager';
+import {
+  CACHE_REPOSITORY,
+  type ICacheRepository,
+} from '../../../../../shared/cache/domain/cache.repository.interface';
 
 @QueryHandler(FindResourcesQuery)
 export class FindResourcesHandler implements IQueryHandler<FindResourcesQuery> {
@@ -15,8 +17,8 @@ export class FindResourcesHandler implements IQueryHandler<FindResourcesQuery> {
   constructor(
     @Inject(RESOURCES_QUERY_REPOSITORY)
     private readonly repository: IResourcesQueryRepository,
-    @Inject(CACHE_MANAGER)
-    private readonly cache: Cache,
+    @Inject(CACHE_REPOSITORY)
+    private readonly cache: ICacheRepository,
   ) {}
 
   async execute(
@@ -26,6 +28,7 @@ export class FindResourcesHandler implements IQueryHandler<FindResourcesQuery> {
 
     const cached =
       await this.cache.get<{ id: string; name: string }[]>(cacheKey);
+
     if (cached) return cached;
 
     const resources = await this.repository.find();
