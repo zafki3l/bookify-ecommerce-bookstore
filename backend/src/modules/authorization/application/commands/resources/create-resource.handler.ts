@@ -5,7 +5,7 @@ import { Resource } from '../../../domain/entities/resource.entity';
 import {
   type IResourcesCommandRepository,
   RESOURCES_COMMAND_REPOSITORY,
-} from '../../../domain/repositories/resources/resource-command.repository.interface';
+} from '../../../domain/repositories/resources/resources-command.repository.interface';
 import {
   CACHE_REPOSITORY,
   type ICacheRepository,

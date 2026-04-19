@@ -3,7 +3,7 @@ import { IResourceExistsChecker } from '../../../domain/services/resources/resou
 import {
   type IResourcesQueryRepository,
   RESOURCES_QUERY_REPOSITORY,
-} from '../../../domain/repositories/resources/resource-query.repository.interface';
+} from '../../../domain/repositories/resources/resources-query.repository.interface';
 
 @Injectable()
 export class ResourceExistsChecker implements IResourceExistsChecker {
