@@ -9,11 +9,15 @@ import { ACTION_EXISTS_CHECKER } from '../../domain/services/actions/action-exis
 import { ActionExistsChecker } from '../services/actions/action-exists-checker.service';
 import { ACTIONS_COMMAND_REPOSITORY } from '../../domain/repositories/actions/actions-command.repository.interface';
 import { TypeOrmActionsCommandRepository } from '../repositories/actions/typorm-actions-command.repository';
+import { FindActionsHandler } from '../../application/queries/actions/find-actions-handler';
+import { FindOneActionHandler } from '../../application/queries/actions/find-one-action.handler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ActionTypeOrm]), SharedCacheModule],
   providers: [
     CreateActionHandler,
+    FindActionsHandler,
+    FindOneActionHandler,
     {
       provide: ACTIONS_QUERY_REPOSITORY,
       useClass: TypeOrmActionsQueryRepository,

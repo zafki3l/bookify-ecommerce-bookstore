@@ -4,6 +4,8 @@ import ExceptionHandler from '../../../../../shared/exceptions/exception.handler
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateActionCommand } from '../../../application/commands/actions/create-action.command';
 import { ActionResponseDto } from '../../dto/actions/action-response.dto';
+import { FindActionsQuery } from '../../../application/queries/actions/find-actions-query';
+import { FindOneActionQuery } from '../../../application/queries/actions/find-one-action.query';
 
 @Controller('actions')
 export class ActionsController {
@@ -13,13 +15,19 @@ export class ActionsController {
   ) {}
 
   @Get()
-  findAll() {
-    return 'Actions';
+  async findAll(): Promise<ActionResponseDto[]> {
+    const actions = await this.queryBus.execute(new FindActionsQuery());
+
+    return actions
+      ? actions.map((action) => new ActionResponseDto(action.id, action.name))
+      : [];
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return `Action ${id}`;
+  async findOne(@Param('id') id: string) {
+    const action = await this.queryBus.execute(new FindOneActionQuery(id));
+
+    return new ActionResponseDto(action.id, action.name);
   }
 
   @Post()

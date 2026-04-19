@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CreateResourceHandler } from '../../application/commands/resources/create-resource.handler';
 import { UpdateResourceHandler } from '../../application/commands/resources/update-resource.handler';
 import { DeleteResourceHandler } from '../../application/commands/resources/delete-resource.handler';
-import { FindResourcesHandler } from '../../application/queries/resources/find-resource.handler';
+import { FindResourcesHandler } from '../../application/queries/resources/find-resources.handler';
 import { FineOneResourceHandler } from '../../application/queries/resources/find-one-resource.handler';
 import { RESOURCES_COMMAND_REPOSITORY } from '../../domain/repositories/resources/resources-command.repository.interface';
 import { TypeOrmResourcesCommandRepository } from '../repositories/resources/typeorm-resources-command.repository';
