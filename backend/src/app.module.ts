@@ -50,7 +50,7 @@ import KeyvRedis from '@keyv/redis';
     UsersModule,
     AuthorizationModule,
     AuthenticationModule,
-    CacheModule,
+    SharedCacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],
