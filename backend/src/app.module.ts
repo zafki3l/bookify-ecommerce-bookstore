@@ -7,10 +7,14 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
+import { CacheModule } from '@nestjs/cache-manager';
+import Keyv from 'keyv';
+import KeyvRedis from '@keyv/redis';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -25,6 +29,22 @@ import { CqrsModule } from '@nestjs/cqrs';
         synchronize: true,
       }),
     }),
+
+    CacheModule.registerAsync({
+      isGlobal: true,
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        stores: [
+          new Keyv({
+            store: new KeyvRedis(
+              `redis://${config.get('REDIS_HOST')}:${config.get('REDIS_PORT')}`,
+            ),
+            ttl: config.get<number>('REDIS_TTL') ?? 60 * 1000,
+          }),
+        ],
+      }),
+    }),
+
     CqrsModule.forRoot(),
     UsersModule,
     AuthorizationModule,
