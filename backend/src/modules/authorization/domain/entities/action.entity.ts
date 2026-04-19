@@ -1,7 +1,7 @@
-import { ResourceIdEmptyException } from '../exceptions/resources/resource-id-empty.exception';
-import { ResourceNameTooLongException } from '../exceptions/resources/resource-name-too-long.exception';
+import { ActionIdEmptyException } from '../exceptions/actions/action-id-empty.exception';
+import { ActionNameTooLongException } from '../exceptions/actions/action-name-too-long.exception';
 
-export class Resource {
+export class Action {
   private static readonly MAX_LENGTH = 50;
 
   private constructor(
@@ -9,9 +9,9 @@ export class Resource {
     private name: string,
   ) {}
 
-  static create(name: string): Resource {
+  static create(name: string): Action {
     if (name.length > this.MAX_LENGTH) {
-      throw new ResourceNameTooLongException();
+      throw new ActionNameTooLongException();
     }
 
     const normalized = name.trim().toLowerCase();
@@ -21,10 +21,10 @@ export class Resource {
     const id = normalized;
 
     if (!id) {
-      throw new ResourceIdEmptyException();
+      throw new ActionIdEmptyException();
     }
 
-    return new Resource(id, formattedName);
+    return new Action(id, formattedName);
   }
 
   getId(): string {
@@ -36,8 +36,8 @@ export class Resource {
   }
 
   updateName(name: string): void {
-    if (name.length > Resource.MAX_LENGTH) {
-      throw new ResourceNameTooLongException();
+    if (name.length > Action.MAX_LENGTH) {
+      throw new ActionNameTooLongException();
     }
 
     this.name = name;

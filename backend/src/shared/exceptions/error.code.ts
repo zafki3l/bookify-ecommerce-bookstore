@@ -1,0 +1,7 @@
+export enum ErrorCode {
+  NAME_TOO_LONG = 'NAME_TOO_LONG',
+  ID_TOO_LONG = 'ID_TOO_LONG',
+  ID_EMPTY = 'ID_EMPTY',
+  IS_EXISTS = 'IS_EXISTS',
+  NOT_FOUND = 'NOT_FOUND',
+}

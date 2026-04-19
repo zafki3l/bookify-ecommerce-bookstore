@@ -1,8 +1,8 @@
 import { DomainException } from '../../../../../shared/exceptions/domain.exception';
 import { ErrorCode } from '../../../../../shared/exceptions/error.code';
 
-export class ResourceExistsException extends DomainException {
-  constructor(id: string) {
-    super(`Resource ${id} already exists`, ErrorCode.IS_EXISTS);
+export class ActionNameTooLongException extends DomainException {
+  constructor() {
+    super('Action name is too long', ErrorCode.NAME_TOO_LONG);
   }
 }
