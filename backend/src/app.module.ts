@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
 import { AuthorizationModule } from './modules/authorization/authorization.module';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -48,7 +47,6 @@ import KeyvRedis from '@keyv/redis';
     }),
 
     CqrsModule.forRoot(),
-    UsersModule,
     AuthorizationModule,
     AuthenticationModule,
     SharedCacheModule,
