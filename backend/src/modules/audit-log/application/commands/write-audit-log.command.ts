@@ -4,6 +4,6 @@ export class WriteAuditLogCommand {
     public readonly module: string,
     public readonly resourceId: string,
     public readonly performedBy: string,
-    public readonly metadata?: Record<string, any>,
+    public readonly metadata: Record<string, any> | null,
   ) {}
 }
