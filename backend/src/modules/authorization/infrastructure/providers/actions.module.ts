@@ -8,7 +8,7 @@ import { CreateActionHandler } from '../../application/commands/actions/create-a
 import { ACTION_EXISTS_CHECKER } from '../../domain/services/actions/action-exists-checker.service';
 import { ActionExistsChecker } from '../services/actions/action-exists-checker.service';
 import { ACTIONS_COMMAND_REPOSITORY } from '../../domain/repositories/actions/actions-command.repository.interface';
-import { TypeOrmActionsCommandRepository } from '../repositories/actions/typorm-actions-command.repository';
+import { TypeOrmActionsCommandRepository } from '../repositories/actions/typeorm-actions-command.repository';
 import { FindActionsHandler } from '../../application/queries/actions/find-actions-handler';
 import { FindOneActionHandler } from '../../application/queries/actions/find-one-action.handler';
 
