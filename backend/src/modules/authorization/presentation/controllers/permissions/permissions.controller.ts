@@ -9,12 +9,31 @@ import {
   Post,
 } from '@nestjs/common';
 import { CreatePermissionDto } from '../../dto/permissions/create-permission.dto';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { PermissionResponseDto } from '../../dto/permissions/permission-response.dto';
+import { FindPermissionsQuery } from '../../../application/queries/permissions/find-permissions.query';
 
 @Controller('permissions')
 export class PermissionsController {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
   @Get()
-  findAll() {
-    return 'Permissions';
+  async findAll(): Promise<PermissionResponseDto[]> {
+    const permissions = await this.queryBus.execute(new FindPermissionsQuery());
+
+    return permissions
+      ? permissions.map(
+          (permission) =>
+            new PermissionResponseDto(
+              permission.id,
+              permission.resourceId,
+              permission.actionId,
+            ),
+        )
+      : [];
   }
 
   @Get(':id')
