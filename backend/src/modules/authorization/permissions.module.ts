@@ -8,6 +8,8 @@ import { PERMISSION_COMMAND_REPOSITORY } from './domain/repositories/permissions
 import { TypeOrmPermissionsCommandRepository } from './infrastructure/repositories/permissions/typeorm-permissions-command.repository';
 import { FindPermissionsHandler } from './application/queries/permissions/find-permissions.handler';
 import { CreatePermissionHandler } from './application/commands/permissions/create-permission.handler';
+import { PERMISSION_EXISTS_CHECKER } from './domain/services/permissions/permission-exists-checker.service';
+import { PermissionExistsChecker } from './infrastructure/services/permissions/permission-exists-checker.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PermissionTypeOrm]), SharedCacheModule],
@@ -22,7 +24,15 @@ import { CreatePermissionHandler } from './application/commands/permissions/crea
       provide: PERMISSION_COMMAND_REPOSITORY,
       useClass: TypeOrmPermissionsCommandRepository,
     },
+    {
+      provide: PERMISSION_EXISTS_CHECKER,
+      useClass: PermissionExistsChecker,
+    },
   ],
-  exports: [PERMISSIONS_QUERY_REPOSITORY, PERMISSION_COMMAND_REPOSITORY],
+  exports: [
+    PERMISSIONS_QUERY_REPOSITORY,
+    PERMISSION_COMMAND_REPOSITORY,
+    PERMISSION_EXISTS_CHECKER,
+  ],
 })
 export class PermissionsModule {}
