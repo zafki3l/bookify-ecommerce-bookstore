@@ -12,6 +12,7 @@ import { PERMISSION_EXISTS_CHECKER } from './domain/services/permissions/permiss
 import { PermissionExistsChecker } from './infrastructure/services/permissions/permission-exists-checker.service';
 import { ResourcesModule } from './resources.module';
 import { ActionsModule } from './actions.module';
+import { FindOnePermissionHandler } from './application/queries/permissions/find-one-permission.handler';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ActionsModule } from './actions.module';
   providers: [
     CreatePermissionHandler,
     FindPermissionsHandler,
+    FindOnePermissionHandler,
     {
       provide: PERMISSIONS_QUERY_REPOSITORY,
       useClass: TypeOrmPermissionsQueryRepository,
