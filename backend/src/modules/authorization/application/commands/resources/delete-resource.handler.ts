@@ -24,6 +24,7 @@ export class DeleteResourceHandler implements ICommandHandler<DeleteResourceComm
 
     await this.repository.delete(resource);
 
+    await this.cache.del('resources:{}');
     await this.cache.del(`resource:${command.id}`);
   }
 }

@@ -27,4 +27,8 @@ export class TypeOrmActionsCommandRepository implements IActionsCommandRepositor
   async save(action: Action): Promise<void> {
     await this.repository.save(ActionsMapper.toTypeOrm(action));
   }
+
+  async delete(action: Action): Promise<void> {
+    await this.repository.delete({ id: action.getId() });
+  }
 }

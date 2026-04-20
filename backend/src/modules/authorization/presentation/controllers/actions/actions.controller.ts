@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -16,6 +18,7 @@ import { FindActionsQuery } from '../../../application/queries/actions/find-acti
 import { FindOneActionQuery } from '../../../application/queries/actions/find-one-action.query';
 import { UpdateActionDto } from '../../dto/actions/update-action.dto';
 import { UpdateActionCommand } from '../../../application/commands/actions/update-action.command';
+import { DeleteActionCommand } from '../../../application/commands/actions/delete-action.command';
 
 @Controller('actions')
 export class ActionsController {
@@ -72,5 +75,12 @@ export class ActionsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {}
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string) {
+    try {
+      await this.commandBus.execute(new DeleteActionCommand(id));
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
 }
