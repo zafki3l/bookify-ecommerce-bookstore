@@ -30,7 +30,7 @@ export class Permission {
       throw new ActionIdTooLongException();
     }
 
-    const id = `${resourceId}:${actionId}`;
+    const id = `${resourceId}.${actionId}`;
 
     if (!id) {
       throw new PermissionIdEmptyException();
