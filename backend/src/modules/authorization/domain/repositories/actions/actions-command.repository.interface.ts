@@ -4,6 +4,8 @@ export interface IActionsCommandRepository {
   findById(id: string): Promise<Action>;
 
   save(action: Action): Promise<void>;
+
+  delete(action: Action): Promise<void>;
 }
 
 export const ACTIONS_COMMAND_REPOSITORY = 'IActionsCommandRepository';
