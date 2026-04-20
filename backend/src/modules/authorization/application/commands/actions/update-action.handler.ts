@@ -6,12 +6,19 @@ import {
   ACTIONS_COMMAND_REPOSITORY,
   type IActionsCommandRepository,
 } from '../../../domain/repositories/actions/actions-command.repository.interface';
+import {
+  CACHE_REPOSITORY,
+  type ICacheRepository,
+} from '../../../../../shared/cache/domain/cache.repository.interface';
 
 @CommandHandler(UpdateActionCommand)
 export class UpdateActionHandler implements ICommandHandler<UpdateActionCommand> {
   constructor(
     @Inject(ACTIONS_COMMAND_REPOSITORY)
     private readonly repository: IActionsCommandRepository,
+
+    @Inject(CACHE_REPOSITORY)
+    private readonly cache: ICacheRepository,
   ) {}
 
   async execute(command: UpdateActionCommand): Promise<Action> {
@@ -20,6 +27,7 @@ export class UpdateActionHandler implements ICommandHandler<UpdateActionCommand>
     action.updateName(command.name);
 
     await this.repository.save(action);
+    await this.cache.del(`action:${command.id}`);
 
     return action;
   }
