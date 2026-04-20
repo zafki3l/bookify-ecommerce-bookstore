@@ -3,7 +3,7 @@ import { ResourceTypeOrm } from '../entities/resource.entity';
 
 export class ResourcesMapper {
   static toDomain(resourceTypeOrm: ResourceTypeOrm): Resource {
-    return Resource.create(resourceTypeOrm.name);
+    return Resource.fromPersistent(resourceTypeOrm.id, resourceTypeOrm.name);
   }
 
   static toTypeOrm(resource: Resource): ResourceTypeOrm {
