@@ -10,22 +10,22 @@ import { ResourceTypeOrm } from './resource.entity';
 import { ActionTypeOrm } from './action.entity';
 
 @Entity('permissions')
-@Unique(['resource_id', 'action_id'])
+@Unique(['resourceId', 'actionId'])
 export class PermissionTypeOrm {
   @PrimaryColumn({ type: 'varchar', length: 50 })
   id!: string;
 
-  @Column()
-  resource_id!: string;
+  @Column({ type: 'varchar', length: 50 })
+  resourceId!: string;
 
-  @Column()
-  action_id!: string;
+  @Column({ type: 'varchar', length: 50 })
+  actionId!: string;
 
   @ManyToOne(() => ResourceTypeOrm)
-  @JoinColumn({ name: 'resource_id' })
+  @JoinColumn({ name: 'resourceId' })
   resource!: ResourceTypeOrm;
 
   @ManyToOne(() => ActionTypeOrm)
-  @JoinColumn({ name: 'action_id' })
+  @JoinColumn({ name: 'actionId' })
   action!: ActionTypeOrm;
 }
