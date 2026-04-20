@@ -10,9 +10,16 @@ import { FindPermissionsHandler } from './application/queries/permissions/find-p
 import { CreatePermissionHandler } from './application/commands/permissions/create-permission.handler';
 import { PERMISSION_EXISTS_CHECKER } from './domain/services/permissions/permission-exists-checker.service';
 import { PermissionExistsChecker } from './infrastructure/services/permissions/permission-exists-checker.service';
+import { ResourcesModule } from './resources.module';
+import { ActionsModule } from './actions.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PermissionTypeOrm]), SharedCacheModule],
+  imports: [
+    TypeOrmModule.forFeature([PermissionTypeOrm]),
+    SharedCacheModule,
+    ResourcesModule,
+    ActionsModule,
+  ],
   providers: [
     CreatePermissionHandler,
     FindPermissionsHandler,
