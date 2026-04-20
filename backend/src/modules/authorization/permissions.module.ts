@@ -13,6 +13,7 @@ import { PermissionExistsChecker } from './infrastructure/services/permissions/p
 import { ResourcesModule } from './resources.module';
 import { ActionsModule } from './actions.module';
 import { FindOnePermissionHandler } from './application/queries/permissions/find-one-permission.handler';
+import { DeletePermissionHandler } from './application/commands/permissions/delete-permission.handler';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { FindOnePermissionHandler } from './application/queries/permissions/find
   ],
   providers: [
     CreatePermissionHandler,
+    DeletePermissionHandler,
     FindPermissionsHandler,
     FindOnePermissionHandler,
     {

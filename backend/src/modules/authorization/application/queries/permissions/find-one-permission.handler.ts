@@ -2,7 +2,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { FindOnePermissionQuery } from './find-one-permission.query';
 import { Inject } from '@nestjs/common';
 import {
-  type IPermissionQueryRepository,
+  type IPermissionsQueryRepository,
   PERMISSIONS_QUERY_REPOSITORY,
 } from '../../../domain/repositories/permissions/permissions-query.repository.interface';
 import {
@@ -16,7 +16,7 @@ export class FindOnePermissionHandler implements IQueryHandler<FindOnePermission
 
   constructor(
     @Inject(PERMISSIONS_QUERY_REPOSITORY)
-    private readonly repository: IPermissionQueryRepository,
+    private readonly repository: IPermissionsQueryRepository,
 
     @Inject(CACHE_REPOSITORY)
     private readonly cache: ICacheRepository,
