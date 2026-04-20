@@ -21,12 +21,19 @@ import {
   PERMISSION_EXISTS_CHECKER,
 } from '../../../domain/services/permissions/permission-exists-checker.service';
 import { PermissionExistsException } from '../../../domain/exceptions/permissions/permission-exists.exception';
+import {
+  CACHE_REPOSITORY,
+  type ICacheRepository,
+} from '../../../../../shared/cache/domain/cache.repository.interface';
 
 @CommandHandler(CreatePermissionCommand)
 export class CreatePermissionHandler implements ICommandHandler<CreatePermissionCommand> {
   constructor(
     @Inject(PERMISSION_COMMAND_REPOSITORY)
     private readonly repository: IPermissionsCommandRepository,
+
+    @Inject(CACHE_REPOSITORY)
+    private readonly cache: ICacheRepository,
 
     @Inject(RESOURCE_EXISTS_CHECKER)
     private readonly resourceExistsChecker: IResourceExistsChecker,
@@ -62,6 +69,7 @@ export class CreatePermissionHandler implements ICommandHandler<CreatePermission
     const permission = Permission.create(id, resourceId, actionId);
 
     await this.repository.save(permission);
+    await this.cache.del('permissions{}');
 
     return permission;
   }
