@@ -13,6 +13,7 @@ import { FindActionsHandler } from './application/queries/actions/find-actions-h
 import { FindOneActionHandler } from './application/queries/actions/find-one-action.handler';
 import { UpdateActionHandler } from './application/commands/actions/update-action.handler';
 import { DeleteActionHandler } from './application/commands/actions/delete-action.handler';
+import { PermissionsController } from './presentation/controllers/permissions/permissions.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ActionTypeOrm]), SharedCacheModule],
@@ -40,5 +41,6 @@ import { DeleteActionHandler } from './application/commands/actions/delete-actio
     ACTIONS_COMMAND_REPOSITORY,
     ACTION_EXISTS_CHECKER,
   ],
+  controllers: [PermissionsController],
 })
 export class ActionsModule {}

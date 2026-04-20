@@ -3,9 +3,10 @@ import { ResourcesController } from './presentation/controllers/resources/resour
 import { ActionsController } from './presentation/controllers/actions/actions.controller';
 import { ActionsModule } from './actions.module';
 import { ResourcesModule } from './resources.module';
+import { PermissionsModule } from './permissions.module';
 
 @Module({
-  imports: [ResourcesModule, ActionsModule],
+  imports: [ResourcesModule, ActionsModule, PermissionsModule],
   controllers: [ResourcesController, ActionsController],
 })
 export class AuthorizationModule {}
