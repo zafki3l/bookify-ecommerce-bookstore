@@ -7,10 +7,12 @@ import { TypeOrmPermissionsQueryRepository } from './infrastructure/repositories
 import { PERMISSION_COMMAND_REPOSITORY } from './domain/repositories/permissions/permissions-command.repository.interface';
 import { TypeOrmPermissionsCommandRepository } from './infrastructure/repositories/permissions/typeorm-permissions-command.repository';
 import { FindPermissionsHandler } from './application/queries/permissions/find-permissions.handler';
+import { CreatePermissionHandler } from './application/commands/permissions/create-permission.handler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PermissionTypeOrm]), SharedCacheModule],
   providers: [
+    CreatePermissionHandler,
     FindPermissionsHandler,
     {
       provide: PERMISSIONS_QUERY_REPOSITORY,

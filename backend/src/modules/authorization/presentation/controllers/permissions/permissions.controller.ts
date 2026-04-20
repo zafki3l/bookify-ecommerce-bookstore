@@ -12,6 +12,8 @@ import { CreatePermissionDto } from '../../dto/permissions/create-permission.dto
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { PermissionResponseDto } from '../../dto/permissions/permission-response.dto';
 import { FindPermissionsQuery } from '../../../application/queries/permissions/find-permissions.query';
+import ExceptionHandler from '../../../../../shared/exception/exception.handler';
+import { CreatePermissionCommand } from '../../../application/commands/permissions/create-permission.command';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -42,7 +44,26 @@ export class PermissionsController {
   }
 
   @Post()
-  create(@Body() createPermission: CreatePermissionDto) {}
+  async create(
+    @Body() createPermission: CreatePermissionDto,
+  ): Promise<PermissionResponseDto> {
+    try {
+      const permission = await this.commandBus.execute(
+        new CreatePermissionCommand(
+          createPermission.resourceId,
+          createPermission.actionId,
+        ),
+      );
+
+      return new PermissionResponseDto(
+        permission.getId(),
+        permission.getResourceId(),
+        permission.getActionId(),
+      );
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
