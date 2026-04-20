@@ -37,6 +37,14 @@ export class Permission {
     return new Permission(id, resourceId, actionId);
   }
 
+  static fromPersistent(
+    id: string,
+    resourceId: string,
+    actionId: string,
+  ): Permission {
+    return new Permission(id, resourceId, actionId);
+  }
+
   getId(): string {
     return this.id;
   }

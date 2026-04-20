@@ -1,4 +1,4 @@
-export interface IPermissionQueryRepository {
+export interface IPermissionsQueryRepository {
   find(): Promise<{ id: string; resourceId: string; actionId: string }[]>;
 
   findOne(
@@ -6,4 +6,4 @@ export interface IPermissionQueryRepository {
   ): Promise<{ id: string; resourceId: string; actionId: string } | null>;
 }
 
-export const PERMISSIONS_QUERY_REPOSITORY = 'IPermissionQueryRepository';
+export const PERMISSIONS_QUERY_REPOSITORY = 'IPermissionsQueryRepository';

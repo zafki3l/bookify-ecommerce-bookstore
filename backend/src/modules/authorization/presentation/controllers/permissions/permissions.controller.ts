@@ -14,6 +14,8 @@ import { PermissionResponseDto } from '../../dto/permissions/permission-response
 import { FindPermissionsQuery } from '../../../application/queries/permissions/find-permissions.query';
 import ExceptionHandler from '../../../../../shared/exception/exception.handler';
 import { CreatePermissionCommand } from '../../../application/commands/permissions/create-permission.command';
+import { FindOnePermissionQuery } from '../../../application/queries/permissions/find-one-permission.query';
+import { DeletePermissionCommand } from '../../../application/commands/permissions/delete-permission.command';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -39,8 +41,16 @@ export class PermissionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return `Permission with id: ${id}`;
+  async findOne(@Param('id') id: string): Promise<PermissionResponseDto> {
+    const permission = await this.queryBus.execute(
+      new FindOnePermissionQuery(id),
+    );
+
+    return new PermissionResponseDto(
+      permission.id,
+      permission.resourceId,
+      permission.actionId,
+    );
   }
 
   @Post()
@@ -67,5 +77,11 @@ export class PermissionsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {}
+  async remove(@Param('id') id: string): Promise<void> {
+    try {
+      await this.commandBus.execute(new DeletePermissionCommand(id));
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
 }

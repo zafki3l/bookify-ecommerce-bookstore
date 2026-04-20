@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { IPermissionQueryRepository } from '../../../domain/repositories/permissions/permissions-query.repository.interface';
+import { IPermissionsQueryRepository } from '../../../domain/repositories/permissions/permissions-query.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PermissionTypeOrm } from '../../entities/permission.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class TypeOrmPermissionsQueryRepository implements IPermissionQueryRepository {
+export class TypeOrmPermissionsQueryRepository implements IPermissionsQueryRepository {
   constructor(
     @InjectRepository(PermissionTypeOrm)
     private readonly repository: Repository<PermissionTypeOrm>,
