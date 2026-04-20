@@ -11,7 +11,6 @@ import {
   ACTIONS_COMMAND_REPOSITORY,
   type IActionsCommandRepository,
 } from '../../../domain/repositories/actions/actions-command.repository.interface';
-import { WriteAuditLogCommand } from '../../../../audit-log/application/commands/write-audit-log.command';
 import {
   CACHE_REPOSITORY,
   type ICacheRepository,
