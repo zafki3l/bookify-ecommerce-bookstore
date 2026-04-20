@@ -1,8 +1,8 @@
 import { DomainException } from '../../../../../shared/exception/domain.exception';
 import { ResourceErrorCode } from './resource-error-code';
 
-export class ResourceIdEmptyException extends DomainException {
+export class ResourceNameEmptyException extends DomainException {
   constructor() {
-    super('Resource id is required', ResourceErrorCode.RESOURCE_ID_EMPTY);
+    super('Resource name is required', ResourceErrorCode.RESOURCE_NAME_EMPTY);
   }
 }

@@ -1,4 +1,5 @@
 import { ResourceIdEmptyException } from '../exceptions/resources/resource-id-empty.exception';
+import { ResourceNameEmptyException } from '../exceptions/resources/resource-name-empty.exception';
 import { ResourceNameTooLongException } from '../exceptions/resources/resource-name-too-long.exception';
 
 export class Resource {
@@ -10,6 +11,10 @@ export class Resource {
   ) {}
 
   static create(name: string): Resource {
+    if (!name) {
+      throw new ResourceNameEmptyException();
+    }
+
     if (name.length > this.MAX_LENGTH) {
       throw new ResourceNameTooLongException();
     }
@@ -40,6 +45,10 @@ export class Resource {
   }
 
   updateName(name: string): void {
+    if (!name) {
+      throw new ResourceNameEmptyException();
+    }
+
     if (name.length > Resource.MAX_LENGTH) {
       throw new ResourceNameTooLongException();
     }
