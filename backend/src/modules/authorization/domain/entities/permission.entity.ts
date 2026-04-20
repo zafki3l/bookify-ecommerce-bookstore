@@ -13,7 +13,7 @@ export class Permission {
     private actionId: string,
   ) {}
 
-  static create(resourceId: string, actionId: string): Permission {
+  static create(id: string, resourceId: string, actionId: string): Permission {
     if (!resourceId) {
       throw new ResourceIdEmptyException();
     }
@@ -22,18 +22,16 @@ export class Permission {
       throw new ActionIdEmptyException();
     }
 
+    if (!id) {
+      throw new PermissionIdEmptyException();
+    }
+
     if (resourceId.length > this.MAX_LENGTH) {
       throw new ResourceIdTooLongException();
     }
 
     if (actionId.length > this.MAX_LENGTH) {
       throw new ActionIdTooLongException();
-    }
-
-    const id = `${resourceId}.${actionId}`;
-
-    if (!id) {
-      throw new PermissionIdEmptyException();
     }
 
     return new Permission(id, resourceId, actionId);
