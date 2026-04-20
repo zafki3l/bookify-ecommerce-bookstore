@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateActionDto } from '../../dto/actions/create-action.dto';
 import ExceptionHandler from '../../../../../shared/exception/exception.handler';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
@@ -6,6 +14,7 @@ import { CreateActionCommand } from '../../../application/commands/actions/creat
 import { ActionResponseDto } from '../../dto/actions/action-response.dto';
 import { FindActionsQuery } from '../../../application/queries/actions/find-actions-query';
 import { FindOneActionQuery } from '../../../application/queries/actions/find-one-action.query';
+import { UpdateActionDto } from '../../dto/actions/update-action.dto';
 
 @Controller('actions')
 export class ActionsController {
@@ -42,4 +51,13 @@ export class ActionsController {
       ExceptionHandler.handle(error);
     }
   }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateAction: UpdateActionDto,
+  ) {}
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {}
 }
