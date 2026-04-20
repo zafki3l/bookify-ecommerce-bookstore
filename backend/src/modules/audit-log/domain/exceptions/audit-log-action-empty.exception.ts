@@ -1,8 +1,11 @@
 import { DomainException } from '../../../../shared/exception/domain.exception';
-import { ErrorCode } from '../../../../shared/exception/error.code';
+import { AuditLogErrorCode } from './audit-log-error-code';
 
 export class AuditLogActionEmptyException extends DomainException {
   constructor() {
-    super('Audit log action is required', ErrorCode.AUDIT_LOG_ACTION_EMPTY);
+    super(
+      'Audit log action is required',
+      AuditLogErrorCode.AUDIT_LOG_ACTION_EMPTY,
+    );
   }
 }
