@@ -27,6 +27,10 @@ export class Action {
     return new Action(id, formattedName);
   }
 
+  static fromPersistent(id: string, name: string): Action {
+    return new Action(id, name);
+  }
+
   getId(): string {
     return this.id;
   }

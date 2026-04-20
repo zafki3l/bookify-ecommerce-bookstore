@@ -27,6 +27,10 @@ export class Resource {
     return new Resource(id, formattedName);
   }
 
+  static fromPersistent(id: string, name: string): Resource {
+    return new Resource(id, name);
+  }
+
   getId(): string {
     return this.id;
   }
