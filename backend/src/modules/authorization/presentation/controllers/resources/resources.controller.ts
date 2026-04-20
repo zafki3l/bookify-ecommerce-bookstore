@@ -75,11 +75,9 @@ export class ResourcesController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string): Promise<void> {
     try {
       await this.commandBus.execute(new DeleteResourceCommand(id));
-
-      return 'deleted';
     } catch (error) {
       ExceptionHandler.handle(error);
     }

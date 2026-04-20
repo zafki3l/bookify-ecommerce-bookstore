@@ -11,11 +11,13 @@ import { ACTIONS_COMMAND_REPOSITORY } from './domain/repositories/actions/action
 import { TypeOrmActionsCommandRepository } from './infrastructure/repositories/actions/typeorm-actions-command.repository';
 import { FindActionsHandler } from './application/queries/actions/find-actions-handler';
 import { FindOneActionHandler } from './application/queries/actions/find-one-action.handler';
+import { UpdateActionHandler } from './application/commands/actions/update-action.handler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ActionTypeOrm]), SharedCacheModule],
   providers: [
     CreateActionHandler,
+    UpdateActionHandler,
     FindActionsHandler,
     FindOneActionHandler,
     {

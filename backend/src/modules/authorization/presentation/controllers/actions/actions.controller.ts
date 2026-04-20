@@ -15,6 +15,7 @@ import { ActionResponseDto } from '../../dto/actions/action-response.dto';
 import { FindActionsQuery } from '../../../application/queries/actions/find-actions-query';
 import { FindOneActionQuery } from '../../../application/queries/actions/find-one-action.query';
 import { UpdateActionDto } from '../../dto/actions/update-action.dto';
+import { UpdateActionCommand } from '../../../application/commands/actions/update-action.command';
 
 @Controller('actions')
 export class ActionsController {
@@ -33,14 +34,16 @@ export class ActionsController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<ActionResponseDto> {
     const action = await this.queryBus.execute(new FindOneActionQuery(id));
 
     return new ActionResponseDto(action.id, action.name);
   }
 
   @Post()
-  async create(@Body() createAction: CreateActionDto) {
+  async create(
+    @Body() createAction: CreateActionDto,
+  ): Promise<ActionResponseDto> {
     try {
       const action = await this.commandBus.execute(
         new CreateActionCommand(createAction.name),
@@ -56,7 +59,17 @@ export class ActionsController {
   async update(
     @Param('id') id: string,
     @Body() updateAction: UpdateActionDto,
-  ) {}
+  ): Promise<ActionResponseDto> {
+    try {
+      const action = await this.commandBus.execute(
+        new UpdateActionCommand(id, updateAction.name),
+      );
+
+      return new ActionResponseDto(action.getId(), action.getName());
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {}
