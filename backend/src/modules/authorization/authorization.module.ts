@@ -5,9 +5,16 @@ import { ActionsModule } from './actions.module';
 import { ResourcesModule } from './resources.module';
 import { PermissionsModule } from './permissions.module';
 import { PermissionsController } from './presentation/controllers/permissions/permissions.controller';
+import { RolesController } from './presentation/controllers/roles/roles.controller';
+import { RolesModule } from './roles.module';
 
 @Module({
-  imports: [ResourcesModule, ActionsModule, PermissionsModule],
-  controllers: [ResourcesController, ActionsController, PermissionsController],
+  imports: [ResourcesModule, ActionsModule, PermissionsModule, RolesModule],
+  controllers: [
+    ResourcesController,
+    ActionsController,
+    PermissionsController,
+    RolesController,
+  ],
 })
 export class AuthorizationModule {}

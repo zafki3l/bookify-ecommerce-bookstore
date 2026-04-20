@@ -41,6 +41,5 @@ import { PermissionsController } from './presentation/controllers/permissions/pe
     ACTIONS_COMMAND_REPOSITORY,
     ACTION_EXISTS_CHECKER,
   ],
-  controllers: [PermissionsController],
 })
 export class ActionsModule {}
