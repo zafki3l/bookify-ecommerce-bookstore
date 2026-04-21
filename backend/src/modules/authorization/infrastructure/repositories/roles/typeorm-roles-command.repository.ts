@@ -4,6 +4,7 @@ import { RoleTypeOrm } from '../../entities/role.entity';
 import { Repository } from 'typeorm';
 import { Role } from '../../../domain/entities/role.entity';
 import { RolesMapper } from '../../mappers/roles.mapper';
+import { RoleNotFoundException } from '../../../domain/exceptions/roles/role-not-found.exception';
 
 export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
   constructor(
@@ -12,7 +13,13 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
   ) {}
 
   async findById(id: string): Promise<Role> {
-    return Role.create(id);
+    const role = await this.repository.findOne({ where: { id } });
+
+    if (!role) {
+      throw new RoleNotFoundException(id);
+    }
+
+    return RolesMapper.toDomain(role);
   }
 
   async save(role: Role): Promise<void> {

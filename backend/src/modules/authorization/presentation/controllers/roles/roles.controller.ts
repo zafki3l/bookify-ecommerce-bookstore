@@ -16,6 +16,8 @@ import { FindOneRoleQuery } from '../../../application/queries/roles/find-one-ro
 import { CreateRoleDto } from '../../dto/roles/create-role.dto';
 import ExceptionHandler from '../../../../../shared/exception/exception.handler';
 import { CreateRoleCommand } from '../../../application/commands/roles/create-role.command';
+import { UpdateRoleDto } from '../../dto/roles/update-role.dto';
+import { UpdateRoleCommand } from '../../../application/commands/roles/update-role.command';
 
 @Controller('roles')
 export class RolesController {
@@ -54,7 +56,17 @@ export class RolesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string) {}
+  async update(@Param('id') id: string, @Body() updateRole: UpdateRoleDto) {
+    try {
+      const role = await this.commandBus.execute(
+        new UpdateRoleCommand(id, updateRole.name),
+      );
+
+      return new RoleResponseDto(role.getId(), role.getName());
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)

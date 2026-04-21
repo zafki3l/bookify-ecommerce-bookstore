@@ -11,11 +11,13 @@ import { FindOneRoleHandler } from './application/queries/roles/find-one-role.ha
 import { CreateRoleHandler } from './application/commands/roles/create-role.handler';
 import { ROLE_EXISTS_CHECKER } from './domain/services/roles/role-exists-checker.service';
 import { RoleExistsChecker } from './infrastructure/services/roles/role-exists-checker.service';
+import { UpdateRoleHandler } from './application/commands/roles/update-role.handler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RoleTypeOrm]), SharedCacheModule],
   providers: [
     CreateRoleHandler,
+    UpdateRoleHandler,
     FindRolesHandler,
     FindOneRoleHandler,
     {
