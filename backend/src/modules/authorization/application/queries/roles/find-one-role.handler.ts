@@ -25,7 +25,7 @@ export class FindOneRoleHandler implements IQueryHandler<FindOneRoleQuery> {
   async execute(
     query: FindOneRoleQuery,
   ): Promise<{ id: string; name: string } | null> {
-    const cacheKey = `roles:${query.id}`;
+    const cacheKey = `role:${query.id}`;
 
     const cached = await this.cache.get<{ id: string; name: string }>(cacheKey);
     if (cached) {

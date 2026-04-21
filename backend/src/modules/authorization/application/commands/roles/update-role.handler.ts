@@ -6,12 +6,19 @@ import {
   type IRolesCommandRepository,
   ROLES_COMMAND_REPOSITORY,
 } from '../../../domain/repositories/roles/roles-command.repository.interface';
+import {
+  CACHE_REPOSITORY,
+  type ICacheRepository,
+} from '../../../../../shared/cache/domain/cache.repository.interface';
 
 @CommandHandler(UpdateRoleCommand)
 export class UpdateRoleHandler implements ICommandHandler<UpdateRoleCommand> {
   constructor(
     @Inject(ROLES_COMMAND_REPOSITORY)
     private readonly repository: IRolesCommandRepository,
+
+    @Inject(CACHE_REPOSITORY)
+    private readonly cache: ICacheRepository,
   ) {}
 
   async execute(command: UpdateRoleCommand): Promise<Role> {
@@ -20,6 +27,8 @@ export class UpdateRoleHandler implements ICommandHandler<UpdateRoleCommand> {
     role.updateName(command.name);
 
     await this.repository.save(role);
+    await this.cache.del(`role:${role.getId()}`);
+    await this.cache.del(`roles:{}`);
 
     return role;
   }
