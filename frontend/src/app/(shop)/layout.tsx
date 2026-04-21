@@ -1,0 +1,19 @@
+import React from 'react';
+import FooterContainer from './components/footer/footer.container';
+import NavigationBarContainer from './components/navigation-bar/navigation-bar.container';
+
+export default function ShopLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="min-h-screen bg-[#f7faf5] flex flex-col">
+      <NavigationBarContainer />
+
+      <main className="flex-1">{children}</main>
+
+      <FooterContainer />
+    </div>
+  );
+}
