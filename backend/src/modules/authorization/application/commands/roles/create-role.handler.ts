@@ -11,12 +11,19 @@ import {
   ROLE_EXISTS_CHECKER,
 } from '../../../domain/services/roles/role-exists-checker.service';
 import { RoleExistsException } from '../../../domain/exceptions/roles/role-exists.exception';
+import {
+  CACHE_REPOSITORY,
+  type ICacheRepository,
+} from '../../../../../shared/cache/domain/cache.repository.interface';
 
 @CommandHandler(CreateRoleCommand)
 export class CreateRoleHandler implements ICommandHandler<CreateRoleCommand> {
   constructor(
     @Inject(ROLES_COMMAND_REPOSITORY)
     private readonly repository: IRolesCommandRepository,
+
+    @Inject(CACHE_REPOSITORY)
+    private readonly cache: ICacheRepository,
 
     @Inject(ROLE_EXISTS_CHECKER)
     private readonly roleExistsChecker: IRoleExistsChecker,
@@ -31,6 +38,7 @@ export class CreateRoleHandler implements ICommandHandler<CreateRoleCommand> {
     }
 
     await this.repository.save(role);
+    await this.cache.del('roles:{}');
 
     return role;
   }
