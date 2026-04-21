@@ -26,5 +26,7 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
     await this.repository.save(RolesMapper.toModel(role));
   }
 
-  async delete(role: Role): Promise<void> {}
+  async delete(role: Role): Promise<void> {
+    await this.repository.delete({ id: role.getId() });
+  }
 }

@@ -18,6 +18,7 @@ import ExceptionHandler from '../../../../../shared/exception/exception.handler'
 import { CreateRoleCommand } from '../../../application/commands/roles/create-role.command';
 import { UpdateRoleDto } from '../../dto/roles/update-role.dto';
 import { UpdateRoleCommand } from '../../../application/commands/roles/update-role.command';
+import { DeleteRoleCommand } from '../../../application/commands/roles/delete-role.command';
 
 @Controller('roles')
 export class RolesController {
@@ -70,5 +71,11 @@ export class RolesController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {}
+  async remove(@Param('id') id: string): Promise<void> {
+    try {
+      await this.commandBus.execute(new DeleteRoleCommand(id));
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
 }
