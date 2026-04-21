@@ -5,17 +5,26 @@ import {
   type IRolesCommandRepository,
   ROLES_COMMAND_REPOSITORY,
 } from '../../../domain/repositories/roles/roles-command.repository.interface';
+import {
+  CACHE_REPOSITORY,
+  type ICacheRepository,
+} from '../../../../../shared/cache/domain/cache.repository.interface';
 
 @CommandHandler(DeleteRoleCommand)
 export class DeleteRoleHandler implements ICommandHandler<DeleteRoleCommand> {
   constructor(
     @Inject(ROLES_COMMAND_REPOSITORY)
     private readonly repository: IRolesCommandRepository,
+
+    @Inject(CACHE_REPOSITORY)
+    private readonly cache: ICacheRepository,
   ) {}
 
   async execute(command: DeleteRoleCommand): Promise<void> {
     const role = await this.repository.findById(command.id);
 
     await this.repository.delete(role);
+    await this.cache.del(`role:${role.getId()}`);
+    await this.cache.del(`roles:{}`);
   }
 }
