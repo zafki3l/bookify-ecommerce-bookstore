@@ -8,10 +8,14 @@ import { ROLES_COMMAND_REPOSITORY } from './domain/repositories/roles/roles-comm
 import { TypeOrmRolesCommandRepository } from './infrastructure/repositories/roles/typeorm-roles-command.repository';
 import { FindRolesHandler } from './application/queries/roles/find-roles.handler';
 import { FindOneRoleHandler } from './application/queries/roles/find-one-role.handler';
+import { CreateRoleHandler } from './application/commands/roles/create-role.handler';
+import { ROLE_EXISTS_CHECKER } from './domain/services/roles/role-exists-checker.service';
+import { RoleExistsChecker } from './infrastructure/services/roles/role-exists-checker.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RoleTypeOrm]), SharedCacheModule],
   providers: [
+    CreateRoleHandler,
     FindRolesHandler,
     FindOneRoleHandler,
     {
@@ -22,7 +26,15 @@ import { FindOneRoleHandler } from './application/queries/roles/find-one-role.ha
       provide: ROLES_COMMAND_REPOSITORY,
       useClass: TypeOrmRolesCommandRepository,
     },
+    {
+      provide: ROLE_EXISTS_CHECKER,
+      useClass: RoleExistsChecker,
+    },
   ],
-  exports: [ROLES_QUERY_REPOSITORY, ROLES_COMMAND_REPOSITORY],
+  exports: [
+    ROLES_QUERY_REPOSITORY,
+    ROLES_COMMAND_REPOSITORY,
+    ROLE_EXISTS_CHECKER,
+  ],
 })
 export class RolesModule {}

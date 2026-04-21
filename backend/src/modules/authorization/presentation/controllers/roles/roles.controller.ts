@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -12,6 +13,9 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FindRolesQuery } from '../../../application/queries/roles/find-roles.query';
 import { RoleResponseDto } from '../../dto/roles/role-response.dto';
 import { FindOneRoleQuery } from '../../../application/queries/roles/find-one-role.query';
+import { CreateRoleDto } from '../../dto/roles/create-role.dto';
+import ExceptionHandler from '../../../../../shared/exception/exception.handler';
+import { CreateRoleCommand } from '../../../application/commands/roles/create-role.command';
 
 @Controller('roles')
 export class RolesController {
@@ -37,7 +41,17 @@ export class RolesController {
   }
 
   @Post()
-  create() {}
+  async create(@Body() createRole: CreateRoleDto): Promise<RoleResponseDto> {
+    try {
+      const role = await this.commandBus.execute(
+        new CreateRoleCommand(createRole.name),
+      );
+
+      return new RoleResponseDto(role.getId(), role.getName());
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
 
   @Patch(':id')
   update(@Param('id') id: string) {}

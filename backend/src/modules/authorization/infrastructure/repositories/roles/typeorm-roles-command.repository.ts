@@ -3,6 +3,7 @@ import { IRolesCommandRepository } from '../../../domain/repositories/roles/role
 import { RoleTypeOrm } from '../../entities/role.entity';
 import { Repository } from 'typeorm';
 import { Role } from '../../../domain/entities/role.entity';
+import { RolesMapper } from '../../mappers/roles.mapper';
 
 export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
   constructor(
@@ -14,7 +15,9 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
     return Role.create(id);
   }
 
-  async save(role: Role): Promise<void> {}
+  async save(role: Role): Promise<void> {
+    await this.repository.save(RolesMapper.toModel(role));
+  }
 
   async delete(role: Role): Promise<void> {}
 }
