@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IRolePermissionQueryRepository } from '../../../domain/repositories/permission-role/permission-role-query.repository.interface';
+import { IRolePermissionQueryRepository } from '../../../domain/repositories/role-permission/role-permission-query.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RolePermissionTypeOrm } from '../../entities/role-permission.entity';
 import { Repository } from 'typeorm';

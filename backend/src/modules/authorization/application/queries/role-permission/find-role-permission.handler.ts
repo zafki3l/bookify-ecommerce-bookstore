@@ -4,7 +4,7 @@ import { Inject } from '@nestjs/common';
 import {
   type IRolePermissionQueryRepository,
   ROLE_PERMISSION_QUERY_REPOSITORY,
-} from '../../../domain/repositories/permission-role/permission-role-query.repository.interface';
+} from '../../../domain/repositories/role-permission/role-permission-query.repository.interface';
 
 @QueryHandler(FindRolePermissionQuery)
 export class FindRolePermissionHandler implements IQueryHandler<FindRolePermissionQuery> {
