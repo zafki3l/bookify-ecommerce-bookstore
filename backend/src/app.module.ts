@@ -9,6 +9,8 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { CacheModule } from '@nestjs/cache-manager';
 import { SharedCacheModule } from './shared/cache/cache.module';
 import { AuditLogModule } from './modules/audit-log/audit-log.module';
+import { UserManagementModule } from './modules/user-management/user-management.module';
+import { RolePermissionController } from './module/authorization/presentation/controllers/role-permission/role-permission.controller';
 import Keyv from 'keyv';
 import KeyvRedis from '@keyv/redis';
 
@@ -51,8 +53,9 @@ import KeyvRedis from '@keyv/redis';
     AuthenticationModule,
     SharedCacheModule,
     AuditLogModule,
+    UserManagementModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, RolePermissionController],
   providers: [AppService],
 })
 export class AppModule {}
