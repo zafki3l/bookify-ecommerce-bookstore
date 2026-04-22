@@ -1,3 +1,8 @@
+type FooterInformationProps = {
+  information: string;
+  infoLinks: InfoLink[];
+};
+
 import Link from 'next/link';
 
 export default function FooterInformation({

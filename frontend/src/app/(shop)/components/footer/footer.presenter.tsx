@@ -3,6 +3,16 @@ import FooterCopyright from './partials/footer-copyright';
 import FooterDescription from './partials/footer-description';
 import FooterInformation from './partials/footer-information';
 
+type FooterProps = {
+  appName: string;
+  description: string;
+  information: string;
+  infoLinks: InfoLink[];
+  connect: string;
+  connectLinks: ConnectLink[];
+  copyright: string;
+};
+
 export default function FooterPresenter({
   appName,
   description,

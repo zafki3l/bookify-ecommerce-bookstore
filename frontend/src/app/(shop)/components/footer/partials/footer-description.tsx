@@ -1,3 +1,8 @@
+type FooterDescriptionProps = {
+  appName: string;
+  description: string;
+};
+
 export default function FooterDescription({
   appName,
   description,
