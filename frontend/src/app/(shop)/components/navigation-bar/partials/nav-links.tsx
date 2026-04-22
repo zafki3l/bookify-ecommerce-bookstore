@@ -1,5 +1,9 @@
 import Link from 'next/link';
 
+type NavLinksProps = {
+  navLinks: NavLink[];
+};
+
 export default function NavLinks({ navLinks }: NavLinksProps) {
   return (
     <ul className="flex items-center gap-7">

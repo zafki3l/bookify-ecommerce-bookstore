@@ -1,6 +1,13 @@
 import { ShoppingCart, Globe, User } from 'lucide-react';
 import Link from 'next/link';
 
+type NavUserMenuProps = {
+  isDropdownOpen: boolean;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
+  onToggleDropDown: () => void;
+  onCloseDropdown: () => void;
+};
+
 export default function NavUserMenu({
   isDropdownOpen,
   dropdownRef,

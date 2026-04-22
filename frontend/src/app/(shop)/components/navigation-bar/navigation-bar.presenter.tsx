@@ -3,6 +3,15 @@ import NavLogo from './partials/nav-logo';
 import NavSearch from './partials/nav-search';
 import NavUserMenu from './partials/nav-user-menu';
 
+type NavigationBarPresenterProps = {
+  navLinks: NavLink[];
+  isDropdownOpen: boolean;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
+  appName: string;
+  onToggleDropDown: () => void;
+  onCloseDropdown: () => void;
+};
+
 export default function NavigationBarPresenter({
   navLinks,
   isDropdownOpen,
