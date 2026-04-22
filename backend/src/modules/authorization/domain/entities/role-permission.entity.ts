@@ -1,20 +1,33 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
-import { RoleTypeOrm } from '../../infrastructure/entities/role.entity';
-import { PermissionTypeOrm } from '../../infrastructure/entities/permission.entity';
+import { PermissionIdEmptyException } from '../exceptions/permissions/permission-id-empty.exception';
+import { RoleIdEmptyException } from '../exceptions/roles/role-id-empty.exception';
 
-@Entity('role_permission')
-export class RolePermissionTypeOrm {
-  @PrimaryColumn({ type: 'varchar', length: 50 })
-  roleId!: string;
+export class RolePermission {
+  private constructor(
+    private roleId: string,
+    private permissionId: string,
+  ) {}
 
-  @PrimaryColumn({ type: 'varchar', length: 50 })
-  permissionId!: string;
+  static create(roleId: string, permissionId: string): RolePermission {
+    if (!roleId) {
+      throw new RoleIdEmptyException();
+    }
 
-  @ManyToOne(() => RoleTypeOrm)
-  @JoinColumn({ name: 'roleId' })
-  role!: RoleTypeOrm;
+    if (!permissionId) {
+      throw new PermissionIdEmptyException();
+    }
 
-  @ManyToOne(() => PermissionTypeOrm)
-  @JoinColumn({ name: 'permissionId' })
-  permission!: PermissionTypeOrm;
+    return new RolePermission(roleId, permissionId);
+  }
+
+  static fromPersistent(roleId: string, permissionId: string): RolePermission {
+    return new RolePermission(roleId, permissionId);
+  }
+
+  getRoleId(): string {
+    return this.roleId;
+  }
+
+  getPermissionId(): string {
+    return this.permissionId;
+  }
 }
