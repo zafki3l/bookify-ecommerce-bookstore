@@ -13,19 +13,18 @@ export default function NavUserMenu({
         <ShoppingCart size={17} strokeWidth={1.7} />
       </button>
 
-      <div className="relative">
+      <div className="relative" ref={dropdownRef}>
         <button
-          onClick={onToggleDropDown}
+          onClick={() => {
+            console.log('clicked');
+            onToggleDropDown();
+          }}
           className="text-[#047857B3] hover:text-[#2b352f] transition-colors"
         >
           <User size={17} strokeWidth={1.7} />
         </button>
-
         {isDropdownOpen && (
-          <div
-            ref={dropdownRef}
-            className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
-          >
+          <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
             {true ? (
               <>
                 <Link
