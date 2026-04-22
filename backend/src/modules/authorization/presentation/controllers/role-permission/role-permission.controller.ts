@@ -16,6 +16,7 @@ import { RolePermissionResponseDto } from '../../dto/role-permission/role-permis
 import { FindOneRolePermissionQuery } from '../../../application/queries/role-permission/find-one-role-permission.query';
 import ExceptionHandler from '../../../../../shared/exception/exception.handler';
 import { CreateRolePermissionCommand } from '../../../application/commands/role-permission/create-role-permission.command';
+import { DeleteRolePermissionCommand } from '../../../application/commands/role-permission/delete-role-permission.command';
 
 @Controller('role-permission')
 export class RolePermissionController {
@@ -83,8 +84,16 @@ export class RolePermissionController {
 
   @Delete(':roleId/:permissionId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(
+  async remove(
     @Param('roleId') roleId: string,
     @Param('permissionId') permissionId: string,
-  ) {}
+  ): Promise<void> {
+    try {
+      await this.commandBus.execute(
+        new DeleteRolePermissionCommand(roleId, permissionId),
+      );
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
 }
