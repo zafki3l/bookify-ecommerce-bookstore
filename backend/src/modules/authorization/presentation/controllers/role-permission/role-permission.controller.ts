@@ -14,6 +14,8 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FindRolePermissionQuery } from '../../../application/queries/role-permission/find-role-permission.query';
 import { RolePermissionResponseDto } from '../../dto/role-permission/role-permision-response.dto';
 import { FindOneRolePermissionQuery } from '../../../application/queries/role-permission/find-one-role-permission.query';
+import ExceptionHandler from '../../../../../shared/exception/exception.handler';
+import { CreateRolePermissionCommand } from '../../../application/commands/role-permission/create-role-permission.command';
 
 @Controller('role-permission')
 export class RolePermissionController {
@@ -59,7 +61,25 @@ export class RolePermissionController {
   }
 
   @Post()
-  create(@Body() createRolePermission: CreateRolePermissionDto) {}
+  async create(
+    @Body() createRolePermission: CreateRolePermissionDto,
+  ): Promise<RolePermissionResponseDto> {
+    try {
+      const rolePermission = await this.commandBus.execute(
+        new CreateRolePermissionCommand(
+          createRolePermission.roleId,
+          createRolePermission.permissionId,
+        ),
+      );
+
+      return new RolePermissionResponseDto(
+        rolePermission.getRoleId(),
+        rolePermission.getPermissionId(),
+      );
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
 
   @Delete(':roleId/:permissionId')
   @HttpCode(HttpStatus.NO_CONTENT)
