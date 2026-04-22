@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { CreateRolePermissionDto } from '../../dto/role-permission/create-role-p
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FindRolePermissionQuery } from '../../../application/queries/role-permission/find-role-permission.query';
 import { RolePermissionResponseDto } from '../../dto/role-permission/role-permision-response.dto';
+import { FindOneRolePermissionQuery } from '../../../application/queries/role-permission/find-one-role-permission.query';
 
 @Controller('role-permission')
 export class RolePermissionController {
@@ -21,7 +23,7 @@ export class RolePermissionController {
   ) {}
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<RolePermissionResponseDto[]> {
     const rolePermissions = await this.queryBus.execute(
       new FindRolePermissionQuery(),
     );
@@ -38,11 +40,22 @@ export class RolePermissionController {
   }
 
   @Get(':roleId/:permissionId')
-  findOne(
+  async findOne(
     @Param('roleId') roleId: string,
     @Param('permissionId') permissionId: string,
-  ) {
-    return `role ${roleId}, permission ${permissionId}`;
+  ): Promise<RolePermissionResponseDto | null> {
+    const rolePermission = await this.queryBus.execute(
+      new FindOneRolePermissionQuery(roleId, permissionId),
+    );
+
+    if (!rolePermission) {
+      return null;
+    }
+
+    return new RolePermissionResponseDto(
+      rolePermission.roleId,
+      rolePermission.permissionId,
+    );
   }
 
   @Post()

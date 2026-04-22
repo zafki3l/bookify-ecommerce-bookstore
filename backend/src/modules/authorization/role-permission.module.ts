@@ -4,11 +4,13 @@ import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission
 import { ROLE_PERMISSION_QUERY_REPOSITORY } from './domain/repositories/permission-role/permission-role-query.repository.interface';
 import { TypeOrmRolePermissionQueryRepository } from './infrastructure/repositories/role-permission/typeorm-role-permission-query.repository';
 import { FindRolePermissionHandler } from './application/queries/role-permission/find-role-permission.handler';
+import { FindOneRolePermissionHandler } from './application/queries/role-permission/find-one-role-permission.handler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RolePermissionTypeOrm])],
   providers: [
     FindRolePermissionHandler,
+    FindOneRolePermissionHandler,
     {
       provide: ROLE_PERMISSION_QUERY_REPOSITORY,
       useClass: TypeOrmRolePermissionQueryRepository,
