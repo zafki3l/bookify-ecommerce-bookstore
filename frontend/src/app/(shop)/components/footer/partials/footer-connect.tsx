@@ -1,15 +1,5 @@
 import Link from 'next/link';
 
-type ConnectLink = {
-  label: string;
-  path: string;
-};
-
-type FooterConnectProps = {
-  connect: string;
-  connectLinks: ConnectLink[];
-};
-
 export default function FooterConnect({
   connect,
   connectLinks,
