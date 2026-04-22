@@ -2,6 +2,7 @@ import NavLinks from './partials/nav-links';
 import NavLogo from './partials/nav-logo';
 import NavSearch from './partials/nav-search';
 import NavUserMenu from './partials/nav-user-menu';
+import NavWrapper from './partials/nav-wrapper';
 
 type NavigationBarPresenterProps = {
   navLinks: NavLink[];
@@ -13,7 +14,7 @@ export default function NavigationBarPresenter({
   appName,
 }: NavigationBarPresenterProps) {
   return (
-    <header className="top-0 z-40 w-full px-6 py-3.5">
+    <NavWrapper>
       <nav
         className="mx-auto flex h-[52px] w-full max-w-8xl items-center justify-between rounded-full px-7"
         style={{
@@ -31,6 +32,6 @@ export default function NavigationBarPresenter({
 
         <NavUserMenu />
       </nav>
-    </header>
+    </NavWrapper>
   );
 }
