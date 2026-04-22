@@ -5,20 +5,12 @@ import NavUserMenu from './partials/nav-user-menu';
 
 type NavigationBarPresenterProps = {
   navLinks: NavLink[];
-  isDropdownOpen: boolean;
-  dropdownRef: React.RefObject<HTMLDivElement | null>;
   appName: string;
-  onToggleDropDown: () => void;
-  onCloseDropdown: () => void;
 };
 
 export default function NavigationBarPresenter({
   navLinks,
-  isDropdownOpen,
-  dropdownRef,
   appName,
-  onToggleDropDown,
-  onCloseDropdown,
 }: NavigationBarPresenterProps) {
   return (
     <header className="top-0 z-40 w-full px-6 py-3.5">
@@ -37,12 +29,7 @@ export default function NavigationBarPresenter({
 
         <NavSearch />
 
-        <NavUserMenu
-          isDropdownOpen={isDropdownOpen}
-          dropdownRef={dropdownRef}
-          onToggleDropDown={onToggleDropDown}
-          onCloseDropdown={onCloseDropdown}
-        />
+        <NavUserMenu />
       </nav>
     </header>
   );
