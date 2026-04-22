@@ -1,6 +1,8 @@
 import { Search } from 'lucide-react';
 
-export default function NavSearch() {
+type NavSearchProps = {};
+
+export default function NavSearch({}: NavSearchProps) {
   return (
     <div className="flex items-center gap-2 bg-[#eff5ef] rounded-full px-4 h-9 w-[clamp(50px,50%,600px)] min-w-0">
       <Search
