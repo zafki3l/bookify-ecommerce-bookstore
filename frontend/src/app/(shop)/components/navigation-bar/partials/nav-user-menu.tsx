@@ -24,7 +24,7 @@ export default function NavUserMenu({}: NavUserMenuProps) {
         </button>
         {dropdown.isOpen && (
           <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-            {true ? (
+            {false ? (
               <>
                 <Link
                   href="/account"
