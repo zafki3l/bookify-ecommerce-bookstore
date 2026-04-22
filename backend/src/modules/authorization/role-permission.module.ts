@@ -10,11 +10,15 @@ import { ROLE_PERMISSION_COMMAND_REPOSITORY } from './domain/repositories/role-p
 import { TypeOrmRolePermissionCommandRepository } from './infrastructure/repositories/role-permission/typeorm-role-permission-command.repository';
 import { DeleteRolePermissionHandler } from './application/commands/role-permission/delete-role-permission.handler';
 import { SharedCacheModule } from '../../shared/cache/cache.module';
+import { RolesModule } from './roles.module';
+import { PermissionsModule } from './permissions.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([RolePermissionTypeOrm]),
     SharedCacheModule,
+    RolesModule,
+    PermissionsModule,
   ],
   providers: [
     CreateRolePermissionHandler,
