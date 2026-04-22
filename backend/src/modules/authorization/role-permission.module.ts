@@ -8,11 +8,21 @@ import { FindOneRolePermissionHandler } from './application/queries/role-permiss
 import { CreateRolePermissionHandler } from './application/commands/role-permission/create-role-permission.handler';
 import { ROLE_PERMISSION_COMMAND_REPOSITORY } from './domain/repositories/role-permission/role-permission-command.repository.interface';
 import { TypeOrmRolePermissionCommandRepository } from './infrastructure/repositories/role-permission/typeorm-role-permission-command.repository';
+import { DeleteRolePermissionHandler } from './application/commands/role-permission/delete-role-permission.handler';
+import { SharedCacheModule } from '../../shared/cache/cache.module';
+import { RolesModule } from './roles.module';
+import { PermissionsModule } from './permissions.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RolePermissionTypeOrm])],
+  imports: [
+    TypeOrmModule.forFeature([RolePermissionTypeOrm]),
+    SharedCacheModule,
+    RolesModule,
+    PermissionsModule,
+  ],
   providers: [
     CreateRolePermissionHandler,
+    DeleteRolePermissionHandler,
     FindRolePermissionHandler,
     FindOneRolePermissionHandler,
     {
