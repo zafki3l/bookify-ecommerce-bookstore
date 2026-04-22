@@ -1,15 +1,5 @@
 import Link from 'next/link';
 
-type InfoLink = {
-  label: string;
-  path: string;
-};
-
-type FooterInformationProps = {
-  information: string;
-  infoLinks: InfoLink[];
-};
-
 export default function FooterInformation({
   information,
   infoLinks,
