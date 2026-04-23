@@ -2,9 +2,21 @@ import DontHaveAnAccount from './partials/dont-have-an-account';
 import LoginForm from './partials/login-form';
 import LoginHeader from './partials/login-header';
 
-type LoginPresenterProps = {};
+type LoginPresenterProps = {
+  handleSubmit: any;
+  form: any;
+  setForm: any;
+  showPass: any;
+  setShowPass: any;
+};
 
-export default function LoginPresenter({}: LoginPresenterProps) {
+export default function LoginPresenter({
+  handleSubmit,
+  form,
+  setForm,
+  showPass,
+  setShowPass,
+}: LoginPresenterProps) {
   return (
     <div className="flex flex-col items-center w-full max-w-md">
       <div
