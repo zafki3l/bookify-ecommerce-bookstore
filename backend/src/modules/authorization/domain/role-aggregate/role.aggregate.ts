@@ -2,10 +2,11 @@ import { Action } from '../enums/action.enum';
 import { Resource } from '../enums/resource.enum';
 import { PermissionAlreadyGrantedException } from './exceptions/permission-already-granted.exception';
 import { PermissionNotFoundException } from './exceptions/permission-not-found.exception';
-import { RoleIdEmptyException } from './exceptions/role-id-empty.exception';
 import { RoleNameEmptyException } from './exceptions/role-name-empty.exception';
 import { RoleNameTooLongException } from './exceptions/role-name-too-long.exception';
-import { Permission } from './permission.entity';
+import { Permission } from './entities/permission.entity';
+import { IRoleExistsChecker } from './services/role-exists-checker.service.interface';
+import { RoleAlreadyExistsException } from './exceptions/role-already-exists.exception';
 
 export class Role {
   private static readonly MAX_NAME_LENGTH = 50;
@@ -16,20 +17,28 @@ export class Role {
     private permissions: Permission[],
   ) {}
 
-  public static create(id: string, name: string): Role {
-    if (!id) {
-      throw new RoleIdEmptyException();
-    }
+  public static async create(
+    name: string,
+    isRoleExists: IRoleExistsChecker,
+  ): Promise<Role> {
+    const formated = name.trim();
 
-    if (!name || !name.trim()) {
+    if (!formated) {
       throw new RoleNameEmptyException();
     }
 
-    if (name.length > Role.MAX_NAME_LENGTH) {
+    if (formated.length > Role.MAX_NAME_LENGTH) {
       throw new RoleNameTooLongException();
     }
 
-    return new Role(id, name, []);
+    const id = formated.toLowerCase().replace(/\s+/g, '-'); // "Super Admin" -> "super-admin"
+
+    if (await isRoleExists.isExist(id)) {
+      throw new RoleAlreadyExistsException(id);
+    }
+
+    const newName = formated.charAt(0).toUpperCase() + formated.slice(1);
+    return new Role(id, newName, []);
   }
 
   public static fromPersistence(
