@@ -1,15 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ICreateRoleRequest } from '../requests/create-role.request';
+import { ICreateRoleRequest } from './create-role.request';
 import {
   type IRolesCommandRepository,
   ROLES_COMMAND_REPOSITORY,
-} from '../../domain/role-aggregate/repositories/roles-command.repository.interface';
-import { Role } from '../../domain/role-aggregate/role.aggregate';
+} from '../../../domain/role-aggregate/repositories/roles-command.repository.interface';
+import { Role } from '../../../domain/role-aggregate/role.aggregate';
 import {
   type IRoleExistsChecker,
   ROLE_EXISTS_CHECKER,
-} from '../../domain/role-aggregate/services/role-exists-checker.service.interface';
-import { RoleAlreadyExistsException } from '../../domain/role-aggregate/exceptions/role-already-exists.exception';
+} from '../../../domain/role-aggregate/services/role-exists-checker.service.interface';
+import { RoleAlreadyExistsException } from '../../../domain/role-aggregate/exceptions/role-already-exists.exception';
 
 @Injectable()
 export class CreateRoleUseCase {

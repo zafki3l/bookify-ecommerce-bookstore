@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   type IRolesQueryRepository,
   ROLES_QUERY_REPOSITORY,
-} from '../../domain/role-aggregate/repositories/roles-query.repository.interface';
-import { FindRolesResponse } from '../responses/find-roles.response';
+} from '../../../domain/role-aggregate/repositories/roles-query.repository.interface';
+import { FindRolesResponse } from './find-roles.response';
 
 @Injectable()
 export class FindRolesUseCase {
