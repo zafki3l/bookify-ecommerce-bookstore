@@ -11,20 +11,31 @@ import {
 } from '@nestjs/common';
 import { FindRolesUseCase } from '../../../application/use-cases/find-roles.use-case';
 import { FindRolesResponse } from '../../../application/responses/find-roles.response';
+import { FindOneRoleUseCase } from '../../../application/use-cases/find-one-role.use-case';
+import { FindOneRoleResponse } from '../../../application/responses/find-one-role.response';
 
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly findRolesUseCase: FindRolesUseCase) {}
+  public constructor(
+    private readonly findRolesUseCase: FindRolesUseCase,
+    private readonly findOneRoleUseCase: FindOneRoleUseCase,
+  ) {}
 
   @Get()
-  async findAll(): Promise<FindRolesResponse[]> {
+  public async findAll(): Promise<FindRolesResponse[]> {
     const roles = await this.findRolesUseCase.execute();
 
     return roles;
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {}
+  public async findOne(
+    @Param('id') id: string,
+  ): Promise<FindOneRoleResponse | null> {
+    const role = await this.findOneRoleUseCase.execute(id);
+
+    return role;
+  }
 
   @Post()
   async create(@Body() dto: any) {}
