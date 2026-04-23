@@ -9,17 +9,19 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { FindRolesUseCase } from '../../../application/use-cases/find-roles.use-case';
+import { FindRolesResponse } from '../../../application/responses/find-roles.response';
 
 @Controller('roles')
 export class RolesController {
-  constructor(
-    private readonly queryBus: QueryBus,
-    private readonly commandBus: CommandBus,
-  ) {}
+  constructor(private readonly findRolesUseCase: FindRolesUseCase) {}
 
   @Get()
-  async findAll() {}
+  async findAll(): Promise<FindRolesResponse[]> {
+    const roles = await this.findRolesUseCase.execute();
+
+    return roles;
+  }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {}

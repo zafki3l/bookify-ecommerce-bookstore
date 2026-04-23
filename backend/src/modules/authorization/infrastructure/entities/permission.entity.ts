@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn, Unique } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn, Unique } from 'typeorm';
+import { RolePermissionTypeOrm } from './role-permission.entity';
 
 @Entity('permissions')
 @Unique(['resource', 'action'])
@@ -11,4 +12,7 @@ export class PermissionTypeOrm {
 
   @Column({ type: 'varchar', length: 50 })
   action!: string;
+
+  @OneToMany(() => RolePermissionTypeOrm, (rp) => rp.permission)
+  rolePermissions!: RolePermissionTypeOrm[];
 }
