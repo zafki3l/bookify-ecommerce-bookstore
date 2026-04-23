@@ -16,6 +16,8 @@ import { FindOneRoleResponse } from '../../../application/responses/find-one-rol
 import { CreateRoleRequest } from '../../requests/create-role.request';
 import ExceptionHandler from '../../../../../shared/exception/exception.handler';
 import { CreateRoleUseCase } from '../../../application/use-cases/create-role.use-case';
+import { RenameRoleRequest } from '../../requests/rename-role.request';
+import { RenameRoleUseCase } from '../../../application/use-cases/rename-role.use-case';
 
 @Controller('roles')
 export class RolesController {
@@ -23,6 +25,7 @@ export class RolesController {
     private readonly findRolesUseCase: FindRolesUseCase,
     private readonly findOneRoleUseCase: FindOneRoleUseCase,
     private readonly createRoleUseCase: CreateRoleUseCase,
+    private readonly renameRoleUseCase: RenameRoleUseCase,
   ) {}
 
   @Get()
@@ -42,9 +45,21 @@ export class RolesController {
   }
 
   @Post()
-  async create(@Body() request: CreateRoleRequest) {
+  public async create(@Body() request: CreateRoleRequest) {
     try {
       await this.createRoleUseCase.execute(request);
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
+
+  @Patch(':id')
+  public async rename(
+    @Param('id') id: string,
+    @Body() request: RenameRoleRequest,
+  ) {
+    try {
+      await this.renameRoleUseCase.execute(id, request);
     } catch (error) {
       ExceptionHandler.handle(error);
     }

@@ -12,7 +12,7 @@ export class RoleExistsChecker implements IRoleExistsChecker {
   ) {}
 
   public async isExist(id: string): Promise<boolean> {
-    const role = this.repository.findOne(id);
+    const role = await this.repository.findOne(id);
 
     return !!role;
   }

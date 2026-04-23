@@ -5,8 +5,6 @@ import { PermissionNotFoundException } from './exceptions/permission-not-found.e
 import { RoleNameEmptyException } from './exceptions/role-name-empty.exception';
 import { RoleNameTooLongException } from './exceptions/role-name-too-long.exception';
 import { Permission } from './entities/permission.entity';
-import { IRoleExistsChecker } from './services/role-exists-checker.service.interface';
-import { RoleAlreadyExistsException } from './exceptions/role-already-exists.exception';
 
 export class Role {
   private static readonly MAX_NAME_LENGTH = 50;
@@ -18,7 +16,7 @@ export class Role {
   ) {}
 
   public static create(name: string): Role {
-    const formated = name.trim();
+    const formated = name.trim().toLowerCase();
 
     if (!formated) {
       throw new RoleNameEmptyException();
@@ -28,7 +26,7 @@ export class Role {
       throw new RoleNameTooLongException();
     }
 
-    const id = formated.toLowerCase().replace(/\s+/g, '-'); // "Super Admin" -> "super-admin"
+    const id = formated.replace(/\s+/g, '-'); // "Super Admin" -> "super-admin"
 
     const newName = formated.charAt(0).toUpperCase() + formated.slice(1);
     return new Role(id, newName, []);
@@ -51,7 +49,10 @@ export class Role {
       throw new RoleNameTooLongException();
     }
 
-    this.name = name.trim();
+    const formated = name.trim().toLowerCase();
+    const newName = formated.charAt(0).toUpperCase() + formated.slice(1);
+
+    this.name = newName;
   }
 
   public grantPermission(resource: Resource, action: Action): void {
