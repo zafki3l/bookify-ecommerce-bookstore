@@ -11,12 +11,31 @@ import {
 } from '@nestjs/common';
 import { UpdateUserDto } from '../../dto/users/update-user.dto';
 import { CreateUserDto } from '../../dto/users/create-user.dto';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { FindUsersQuery } from '../../../application/queries/find-users.query';
+import { UserResponseDto } from '../../dto/users/user-response.dto';
 
 @Controller('users')
 export class UsersController {
+  constructor(
+    private readonly queryBus: QueryBus,
+    private readonly commandBus: CommandBus,
+  ) {}
+
   @Get()
-  findAll() {
-    return 'all users';
+  async findAll(): Promise<UserResponseDto[]> {
+    const users = await this.queryBus.execute(new FindUsersQuery());
+
+    return users.map(
+      (user) =>
+        new UserResponseDto(
+          user.id,
+          user.firstName,
+          user.lastName,
+          user.email,
+          user.gender,
+        ),
+    );
   }
 
   @Get(':id')
