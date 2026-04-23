@@ -8,7 +8,7 @@ type NavLogoProps = {
 export default function NavLogo({ appName }: NavLogoProps) {
   return (
     <Link href="/">
-      <span className="flex gap-1 text-sm font-bold tracking-tight shrink-0 text-[#2d6a4f]">
+      <span className="flex items-center gap-1 text-sm font-bold tracking-tight shrink-0 text-[#2d6a4f]">
         <BookOpen /> {appName}
       </span>
     </Link>

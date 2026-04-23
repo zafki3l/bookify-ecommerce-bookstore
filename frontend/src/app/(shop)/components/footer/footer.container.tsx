@@ -19,7 +19,7 @@ export default function FooterContainer() {
       infoLinks={infoLinks}
       connect="Connect"
       connectLinks={connectLinks}
-      copyright="© 2026 Bookify. Crafted for the Digital Archivist."
+      copyright="Non-commercial website, only serves educational purposes"
     />
   );
 }
