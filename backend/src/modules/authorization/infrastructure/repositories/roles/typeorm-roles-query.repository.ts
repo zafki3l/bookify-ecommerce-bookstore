@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IRolesQueryRepository } from '../../domain/role-aggregate/repositories/roles-query.repository.interface';
+import { IRolesQueryRepository } from '../../../domain/role-aggregate/repositories/roles-query.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RoleTypeOrm } from '../entities/role.entity';
+import { RoleTypeOrm } from '../../entities/role.entity';
 import { Repository } from 'typeorm';
-import { RoleReadModel } from '../../domain/role-aggregate/read-models/role.read-model';
+import { RoleReadModel } from '../../../domain/role-aggregate/read-models/role.read-model';
 
 @Injectable()
 export class TypeOrmRolesQueryRepository implements IRolesQueryRepository {

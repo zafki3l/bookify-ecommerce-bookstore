@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { IRolesCommandRepository } from '../../domain/role-aggregate/repositories/roles-command.repository.interface';
+import { IRolesCommandRepository } from '../../../domain/role-aggregate/repositories/roles-command.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RoleTypeOrm } from '../entities/role.entity';
+import { RoleTypeOrm } from '../../entities/role.entity';
 import { Repository } from 'typeorm';
-import { Role } from '../../domain/role-aggregate/role.aggregate';
-import { RoleNotFoundException } from '../../domain/role-aggregate/exceptions/role-not-found.exception';
+import { Role } from '../../../domain/role-aggregate/role.aggregate';
+import { RoleNotFoundException } from '../../../domain/role-aggregate/exceptions/role-not-found.exception';
 
 @Injectable()
 export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
