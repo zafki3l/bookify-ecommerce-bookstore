@@ -9,16 +9,16 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { FindRolesUseCase } from '../../../application/role-use-cases/find-roles/find-roles.use-case';
-import { FindRolesResponse } from '../../../application/role-use-cases/find-roles/find-roles.response';
-import { FindOneRoleUseCase } from '../../../application/role-use-cases/find-one-role/find-one-role.use-case';
-import { FindOneRoleResponse } from '../../../application/role-use-cases/find-one-role/find-one-role.response';
-import { CreateRoleRequest } from '../../requests/create-role.request';
-import ExceptionHandler from '../../../../../shared/exception/exception.handler';
-import { CreateRoleUseCase } from '../../../application/role-use-cases/create-role/create-role.use-case';
-import { RenameRoleRequest } from '../../requests/rename-role.request';
-import { RenameRoleUseCase } from '../../../application/role-use-cases/rename-role/rename-role.use-case';
-import { AssignPermissionRequest } from '../../requests/assign-permission.request';
+import { FindRolesUseCase } from '../../application/role-use-cases/find-roles/find-roles.use-case';
+import { FindOneRoleUseCase } from '../../application/role-use-cases/find-one-role/find-one-role.use-case';
+import { CreateRoleUseCase } from '../../application/role-use-cases/create-role/create-role.use-case';
+import { RenameRoleUseCase } from '../../application/role-use-cases/rename-role/rename-role.use-case';
+import { FindRolesResponse } from '../../application/role-use-cases/find-roles/find-roles.response';
+import { FindOneRoleResponse } from '../../application/role-use-cases/find-one-role/find-one-role.response';
+import { CreateRoleRequest } from './requests/create-role.request';
+import ExceptionHandler from '../../../../shared/exception/exception.handler';
+import { RenameRoleRequest } from './requests/rename-role.request';
+import { GrantPermissionRequest } from './requests/grant-permission.request';
 
 @Controller('roles')
 export class RolesController {
@@ -69,7 +69,7 @@ export class RolesController {
   @Post(':id/permissions')
   public async grantPermission(
     @Param('id') id: string,
-    @Body() request: AssignPermissionRequest,
+    @Body() request: GrantPermissionRequest,
   ): Promise<void> {
     try {
     } catch (error) {
