@@ -17,10 +17,7 @@ export class Role {
     private permissions: Permission[],
   ) {}
 
-  public static async create(
-    name: string,
-    isRoleExists: IRoleExistsChecker,
-  ): Promise<Role> {
+  public static create(name: string): Role {
     const formated = name.trim();
 
     if (!formated) {
@@ -32,10 +29,6 @@ export class Role {
     }
 
     const id = formated.toLowerCase().replace(/\s+/g, '-'); // "Super Admin" -> "super-admin"
-
-    if (await isRoleExists.isExist(id)) {
-      throw new RoleAlreadyExistsException(id);
-    }
 
     const newName = formated.charAt(0).toUpperCase() + formated.slice(1);
     return new Role(id, newName, []);

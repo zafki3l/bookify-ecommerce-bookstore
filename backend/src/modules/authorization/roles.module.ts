@@ -7,6 +7,9 @@ import { TypeOrmRolesQueryRepository } from './infrastructure/repositories/typeo
 import { FindRolesUseCase } from './application/use-cases/find-roles.use-case';
 import { RolesController } from './presentation/controllers/roles/roles.controller';
 import { FindOneRoleUseCase } from './application/use-cases/find-one-role.use-case';
+import { ROLES_COMMAND_REPOSITORY } from './domain/role-aggregate/repositories/roles-command.repository.interface';
+import { TypeOrmRolesCommandRepository } from './infrastructure/repositories/typeorm-roles.command.repository';
+import { CreateRoleUseCase } from './application/use-cases/create-role.use-case';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RoleTypeOrm]), SharedCacheModule],
@@ -14,11 +17,16 @@ import { FindOneRoleUseCase } from './application/use-cases/find-one-role.use-ca
   providers: [
     FindRolesUseCase,
     FindOneRoleUseCase,
+    CreateRoleUseCase,
     {
       provide: ROLES_QUERY_REPOSITORY,
       useClass: TypeOrmRolesQueryRepository,
     },
+    {
+      provide: ROLES_COMMAND_REPOSITORY,
+      useClass: TypeOrmRolesCommandRepository,
+    },
   ],
-  exports: [ROLES_QUERY_REPOSITORY],
+  exports: [ROLES_QUERY_REPOSITORY, ROLES_COMMAND_REPOSITORY],
 })
 export class RolesModule {}
