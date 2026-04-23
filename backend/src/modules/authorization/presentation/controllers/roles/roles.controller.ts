@@ -18,6 +18,7 @@ import ExceptionHandler from '../../../../../shared/exception/exception.handler'
 import { CreateRoleUseCase } from '../../../application/use-cases/create-role.use-case';
 import { RenameRoleRequest } from '../../requests/rename-role.request';
 import { RenameRoleUseCase } from '../../../application/use-cases/rename-role.use-case';
+import { AssignPermissionRequest } from '../../requests/assign-permission.request';
 
 @Controller('roles')
 export class RolesController {
@@ -45,7 +46,7 @@ export class RolesController {
   }
 
   @Post()
-  public async create(@Body() request: CreateRoleRequest) {
+  public async create(@Body() request: CreateRoleRequest): Promise<void> {
     try {
       await this.createRoleUseCase.execute(request);
     } catch (error) {
@@ -57,9 +58,20 @@ export class RolesController {
   public async rename(
     @Param('id') id: string,
     @Body() request: RenameRoleRequest,
-  ) {
+  ): Promise<void> {
     try {
       await this.renameRoleUseCase.execute(id, request);
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
+
+  @Post(':id/permissions')
+  public async grantPermission(
+    @Param('id') id: string,
+    @Body() request: AssignPermissionRequest,
+  ): Promise<void> {
+    try {
     } catch (error) {
       ExceptionHandler.handle(error);
     }

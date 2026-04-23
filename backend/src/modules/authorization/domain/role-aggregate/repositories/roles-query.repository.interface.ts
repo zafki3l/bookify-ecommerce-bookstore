@@ -1,4 +1,4 @@
-import { RoleReadModel } from '../../read-models/role.read-model';
+import { RoleReadModel } from '../read-models/role.read-model';
 
 export interface IRolesQueryRepository {
   findAll(): Promise<RoleReadModel[]>;

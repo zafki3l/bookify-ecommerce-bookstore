@@ -1,10 +1,9 @@
-import { Action } from '../enums/action.enum';
-import { Resource } from '../enums/resource.enum';
+import { Action } from '../permission-aggregate/enums/action.enum';
+import { Resource } from '../permission-aggregate/enums/resource.enum';
 import { PermissionAlreadyGrantedException } from './exceptions/permission-already-granted.exception';
 import { PermissionNotFoundException } from './exceptions/permission-not-found.exception';
 import { RoleNameEmptyException } from './exceptions/role-name-empty.exception';
 import { RoleNameTooLongException } from './exceptions/role-name-too-long.exception';
-import { Permission } from './entities/permission.entity';
 
 export class Role {
   private static readonly MAX_NAME_LENGTH = 50;
@@ -12,7 +11,7 @@ export class Role {
   private constructor(
     private readonly id: string,
     private name: string,
-    private permissions: Permission[],
+    private permissions: string[],
   ) {}
 
   public static create(name: string): Role {
@@ -35,7 +34,7 @@ export class Role {
   public static fromPersistence(
     id: string,
     name: string,
-    permissions: Permission[],
+    permissions: string[],
   ): Role {
     return new Role(id, name, permissions);
   }
@@ -55,40 +54,26 @@ export class Role {
     this.name = newName;
   }
 
-  public grantPermission(resource: Resource, action: Action): void {
-    const isExists = this.permissions.some(
-      (permission) =>
-        permission.getResource() === resource &&
-        permission.getAction() === action,
-    );
+  public grantPermission(permission: string): void {
+    const isExists = this.permissions.some((p) => p === permission);
     if (isExists) {
-      throw new PermissionAlreadyGrantedException(`${resource}.${action}`);
+      throw new PermissionAlreadyGrantedException(permission);
     }
 
-    this.permissions.push(Permission.create(resource, action));
+    this.permissions.push(permission);
   }
 
-  public revokePermission(resource: Resource, action: Action): void {
-    const exists = this.permissions.find(
-      (p) => p.getResource() === resource && p.getAction() === action,
-    );
-    if (!exists) {
-      throw new PermissionNotFoundException(`${resource}.${action}`);
+  public revokePermission(permission: string): void {
+    const isExists = this.permissions.find((p) => p === permission);
+    if (!isExists) {
+      throw new PermissionNotFoundException(permission);
     }
 
-    this.permissions = this.permissions.filter(
-      (permission) =>
-        !(
-          permission.getResource() === resource &&
-          permission.getAction() === action
-        ),
-    );
+    this.permissions = this.permissions.filter((p) => !(p === permission));
   }
 
-  public hasPermission(permissionId): boolean {
-    return this.permissions.some(
-      (permission) => permission.getId() === permissionId,
-    );
+  public hasPermission(permission): boolean {
+    return this.permissions.some((p) => p === permission);
   }
 
   public getId(): string {
@@ -99,7 +84,7 @@ export class Role {
     return this.name;
   }
 
-  public getPermissions(): Permission[] {
+  public getPermissions(): string[] {
     return [...this.permissions];
   }
 }
