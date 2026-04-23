@@ -3,9 +3,18 @@ import { UsersController } from './presentention/controllers/users/users.control
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserTypeOrm } from './infrastructure/entities/user.entity';
 import { SharedCacheModule } from '../../shared/cache/cache.module';
+import { USERS_QUERY_REPOSITORY } from './domain/repositories/users-query.repository.interface';
+import { TypeOrmUsersQueryRepository } from './infrastructure/repositories/typeorm-users-query.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserTypeOrm]), SharedCacheModule],
+  providers: [
+    {
+      provide: USERS_QUERY_REPOSITORY,
+      useClass: TypeOrmUsersQueryRepository,
+    },
+  ],
+  exports: [USERS_QUERY_REPOSITORY],
   controllers: [UsersController],
 })
 export class UserManagementModule {}
