@@ -49,11 +49,4 @@ export class RolesController {
       ExceptionHandler.handle(error);
     }
   }
-
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() dto: any) {}
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string) {}
 }

@@ -10,6 +10,8 @@ import { FindOneRoleUseCase } from './application/use-cases/find-one-role.use-ca
 import { ROLES_COMMAND_REPOSITORY } from './domain/role-aggregate/repositories/roles-command.repository.interface';
 import { TypeOrmRolesCommandRepository } from './infrastructure/repositories/typeorm-roles.command.repository';
 import { CreateRoleUseCase } from './application/use-cases/create-role.use-case';
+import { ROLE_EXISTS_CHECKER } from './domain/role-aggregate/services/role-exists-checker.service.interface';
+import { RoleExistsChecker } from './infrastructure/services/role-exists-checker.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([RoleTypeOrm]), SharedCacheModule],
@@ -26,7 +28,15 @@ import { CreateRoleUseCase } from './application/use-cases/create-role.use-case'
       provide: ROLES_COMMAND_REPOSITORY,
       useClass: TypeOrmRolesCommandRepository,
     },
+    {
+      provide: ROLE_EXISTS_CHECKER,
+      useClass: RoleExistsChecker,
+    },
   ],
-  exports: [ROLES_QUERY_REPOSITORY, ROLES_COMMAND_REPOSITORY],
+  exports: [
+    ROLES_QUERY_REPOSITORY,
+    ROLES_COMMAND_REPOSITORY,
+    ROLE_EXISTS_CHECKER,
+  ],
 })
 export class RolesModule {}
