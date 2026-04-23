@@ -1,4 +1,4 @@
-import { DomainException } from '../../../../../shared/exception/domain.exception';
+import { DomainException } from '../../exception/domain.exception';
 
 export class EmailEmptyException extends DomainException {
   constructor() {

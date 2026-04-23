@@ -1,6 +1,6 @@
-import { EmailEmptyException } from '../../exceptions/email/email-empty.exception';
-import { EmailInvalidException } from '../../exceptions/email/email-invalid.exception';
-import { EmailTooLongException } from '../../exceptions/email/email-too-long.exception';
+import { EmailEmptyException } from './email-empty.exception';
+import { EmailInvalidException } from './email-invalid.exception';
+import { EmailTooLongException } from './email-too-long.exception';
 
 export class Email {
   private static MAX_LENGTH = 100;
