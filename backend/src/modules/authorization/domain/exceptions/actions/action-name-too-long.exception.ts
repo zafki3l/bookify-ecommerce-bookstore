@@ -1,8 +1,0 @@
-import { DomainException } from '../../../../../shared/exception/domain.exception';
-import { ActionErrorCode } from './action-error-code';
-
-export class ActionNameTooLongException extends DomainException {
-  constructor() {
-    super('Action name is too long', ActionErrorCode.ACTION_NAME_TOO_LONG);
-  }
-}
