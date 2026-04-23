@@ -14,6 +14,7 @@ import { CreateUserDto } from '../../dto/users/create-user.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { FindUsersQuery } from '../../../application/queries/find-users.query';
 import { UserResponseDto } from '../../dto/users/user-response.dto';
+import { FindOneUserQuery } from '../../../application/queries/find-one-user.query';
 
 @Controller('users')
 export class UsersController {
@@ -39,8 +40,20 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne() {
-    return 'one users';
+  async findOne(@Param('id') id: string): Promise<UserResponseDto | null> {
+    const user = await this.queryBus.execute(new FindOneUserQuery(id));
+
+    if (!user) {
+      return null;
+    }
+
+    return new UserResponseDto(
+      user.id,
+      user.firstName,
+      user.lastName,
+      user.email,
+      user.gender,
+    );
   }
 
   @Post()
