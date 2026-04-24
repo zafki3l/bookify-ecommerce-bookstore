@@ -7,15 +7,14 @@ import { Role } from '../../../domain/role-aggregate/role.aggregate';
 import { RoleNotFoundException } from '../../../domain/role-aggregate/exceptions/role-not-found.exception';
 import { RoleMappers } from '../../mappers/roles.mapper';
 import { RolePermissionTypeOrm } from '../../entities/role-permission.entity';
+import { PermissionGranted } from '../../../domain/role-aggregate/events/permission-granted.event';
+import { PermissionRevoked } from '../../../domain/role-aggregate/events/permission-revoked.event';
 
 @Injectable()
 export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
   public constructor(
     @InjectRepository(RoleTypeOrm)
     private readonly repository: Repository<RoleTypeOrm>,
-
-    @InjectRepository(RolePermissionTypeOrm)
-    private readonly rolePermissionRepository: Repository<RolePermissionTypeOrm>,
   ) {}
 
   public async findOne(id: string): Promise<Role> {
@@ -32,21 +31,32 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
   }
 
   public async save(role: Role): Promise<void> {
-    await this.repository.save(RoleMappers.toTypeOrm(role));
+    await this.repository.manager.transaction(async (manager) => {
+      await manager.save(RoleMappers.toTypeOrm(role));
 
-    await this.rolePermissionRepository.delete({ roleId: role.getId() });
+      for (const event of role.getDomainEvents()) {
+        if (event instanceof PermissionGranted) {
+          const rolePermissionTypeOrm = new RolePermissionTypeOrm();
 
-    const rolePermissions = role.getPermissions().map((permissionId) => {
-      const rolePermissionTypeOrm = new RolePermissionTypeOrm();
+          rolePermissionTypeOrm.roleId = event.roleId;
+          rolePermissionTypeOrm.permissionId = event.permissionId;
 
-      rolePermissionTypeOrm.roleId = role.getId();
-      rolePermissionTypeOrm.permissionId = permissionId;
+          await manager.save(rolePermissionTypeOrm);
+        }
 
-      return rolePermissionTypeOrm;
+        if (event instanceof PermissionRevoked) {
+          await manager.delete(RolePermissionTypeOrm, {
+            roleId: event.roleId,
+            permissionId: event.permissionId,
+          });
+        }
+      }
     });
 
-    if (rolePermissions.length > 0) {
-      await this.rolePermissionRepository.insert(rolePermissions);
-    }
+    role.clearDomainEvents();
+  }
+
+  public async delete(role: Role): Promise<void> {
+    await this.repository.delete({ id: role.getId() });
   }
 }

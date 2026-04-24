@@ -1,16 +1,21 @@
+import { AggregateRoot } from '../../../../shared/domain/aggregate-root';
+import { PermissionGranted } from './events/permission-granted.event';
+import { PermissionRevoked } from './events/permission-revoked.event';
 import { PermissionAlreadyGrantedException } from './exceptions/permission-already-granted.exception';
 import { PermissionNotFoundException } from './exceptions/permission-not-found.exception';
 import { RoleNameEmptyException } from './exceptions/role-name-empty.exception';
 import { RoleNameTooLongException } from './exceptions/role-name-too-long.exception';
 
-export class Role {
+export class Role extends AggregateRoot {
   private static readonly MAX_NAME_LENGTH = 50;
 
   private constructor(
     private readonly id: string,
     private name: string,
     private permissions: string[],
-  ) {}
+  ) {
+    super();
+  }
 
   public static create(name: string): Role {
     const formated = name.trim().toLowerCase();
@@ -59,6 +64,7 @@ export class Role {
     }
 
     this.permissions.push(permission);
+    this.addDomainEvent(new PermissionGranted(this.id, permission));
   }
 
   public revokePermission(permission: string): void {
@@ -68,6 +74,7 @@ export class Role {
     }
 
     this.permissions = this.permissions.filter((p) => !(p === permission));
+    this.addDomainEvent(new PermissionRevoked(this.id, permission));
   }
 
   public hasPermission(permission): boolean {
