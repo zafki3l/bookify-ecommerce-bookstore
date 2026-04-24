@@ -13,15 +13,21 @@ import { ROLE_EXISTS_CHECKER } from './domain/role-aggregate/services/role-exist
 import { RoleExistsChecker } from './infrastructure/services/roles/role-exists-checker.service';
 import { RenameRoleUseCase } from './application/role-use-cases/rename-role/rename-role.use-case';
 import { RolesController } from './presentation/roles/roles.controller';
+import { GrantPermissionUseCase } from './application/role-use-cases/grant-permission/grant-permission.use-case';
+import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RoleTypeOrm]), SharedCacheModule],
+  imports: [
+    TypeOrmModule.forFeature([RoleTypeOrm, RolePermissionTypeOrm]),
+    SharedCacheModule,
+  ],
   controllers: [RolesController],
   providers: [
     FindRolesUseCase,
     FindOneRoleUseCase,
     CreateRoleUseCase,
     RenameRoleUseCase,
+    GrantPermissionUseCase,
     {
       provide: ROLES_QUERY_REPOSITORY,
       useClass: TypeOrmRolesQueryRepository,

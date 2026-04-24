@@ -3,7 +3,10 @@ import { RoleTypeOrm } from '../entities/role.entity';
 
 export class RoleMappers {
   public static toDomain(roleTypeOrm: RoleTypeOrm): Role {
-    return Role.fromPersistence(roleTypeOrm.id, roleTypeOrm.name, []);
+    const permissions =
+      roleTypeOrm.rolePermissions?.map((rp) => rp.permissionId) ?? [];
+
+    return Role.fromPersistence(roleTypeOrm.id, roleTypeOrm.name, permissions);
   }
 
   public static toTypeOrm(role: Role): RoleTypeOrm {

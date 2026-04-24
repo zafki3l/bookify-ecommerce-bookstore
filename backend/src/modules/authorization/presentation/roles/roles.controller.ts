@@ -19,6 +19,7 @@ import { CreateRoleRequest } from './requests/create-role.request';
 import ExceptionHandler from '../../../../shared/exception/exception.handler';
 import { RenameRoleRequest } from './requests/rename-role.request';
 import { GrantPermissionRequest } from './requests/grant-permission.request';
+import { GrantPermissionUseCase } from '../../application/role-use-cases/grant-permission/grant-permission.use-case';
 
 @Controller('roles')
 export class RolesController {
@@ -27,6 +28,7 @@ export class RolesController {
     private readonly findOneRoleUseCase: FindOneRoleUseCase,
     private readonly createRoleUseCase: CreateRoleUseCase,
     private readonly renameRoleUseCase: RenameRoleUseCase,
+    private readonly grantPermissionUseCase: GrantPermissionUseCase,
   ) {}
 
   @Get()
@@ -72,6 +74,7 @@ export class RolesController {
     @Body() request: GrantPermissionRequest,
   ): Promise<void> {
     try {
+      await this.grantPermissionUseCase.execute(id, request);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
