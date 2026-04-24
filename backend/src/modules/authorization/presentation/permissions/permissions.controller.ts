@@ -12,9 +12,9 @@ import { FindPermissionsUseCase } from '../../application/permission-use-cases/f
 import { FindPermissionsResponse } from '../../application/permission-use-cases/find-permissions/find-permissions.response';
 import { FindOnePermissionUseCase } from '../../application/permission-use-cases/find-one-permission/find-one-permission.use-case';
 import { CreatePermissionRequest } from './requests/create-permission.request';
-import ExceptionHandler from '../../../../shared/exception/exception.handler';
 import { CreatePermissionUseCase } from '../../application/permission-use-cases/create-permission/create-permission.use-case';
 import { DeletePermissionUseCase } from '../../application/permission-use-cases/delete-permission/delete-permission.use-case';
+import ExceptionHandler from '../../../../shared/domain/exception/exception.handler';
 
 @Controller('permissions')
 export class PermissionsController {

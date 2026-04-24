@@ -1,4 +1,4 @@
-import { DomainException } from '../../../../../shared/exception/domain.exception';
+import { DomainException } from '../../../../../shared/domain/exception/domain.exception';
 
 export class PermissionAlreadyGrantedException extends DomainException {
   public constructor(permission: string) {

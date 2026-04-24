@@ -1,4 +1,4 @@
-import { DomainException } from '../../../../../shared/exception/domain.exception';
+import { DomainException } from '../../../../../shared/domain/exception/domain.exception';
 
 export class RoleNotFoundException extends DomainException {
   public constructor(id: string) {

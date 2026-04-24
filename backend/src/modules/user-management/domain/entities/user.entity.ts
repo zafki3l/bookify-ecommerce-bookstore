@@ -1,5 +1,5 @@
-import { Email } from '../../../../shared/value-objects/email/email.value-object';
-import { Password } from '../../../../shared/value-objects/password/password.value-object';
+import { Email } from '../../../../shared/domain/value-objects/email/email.value-object';
+import { Password } from '../../../../shared/domain/value-objects/password/password.value-object';
 import { UserGenderEmptyException } from '../exceptions/gender-empty.exception';
 import { UserFirstNameEmptyException } from '../exceptions/user-first-name-empty.exception';
 import { UserGenderInvalidException } from '../exceptions/user-gender-invalid.exception';
