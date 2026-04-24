@@ -5,6 +5,7 @@ import { PermissionTypeOrm } from '../../entities/permission.entity';
 import { Repository } from 'typeorm';
 import { Permission } from '../../../domain/permission-aggregate/permission.aggregate';
 import { PermissionNotFoundException } from '../../../domain/permission-aggregate/exceptions/permission-not-found.exception';
+import { PermissionsMapper } from '../../mappers/permissions.mapper';
 
 @Injectable()
 export class TypeOrmPermissionsCommandRepository implements IPermissionsCommandRepository {
@@ -20,21 +21,11 @@ export class TypeOrmPermissionsCommandRepository implements IPermissionsCommandR
       throw new PermissionNotFoundException(id);
     }
 
-    return Permission.fromPersistent(
-      permissionTypeOrm.id,
-      permissionTypeOrm.resource,
-      permissionTypeOrm.action,
-    );
+    return PermissionsMapper.toDomain(permissionTypeOrm);
   }
 
   public async save(permission: Permission): Promise<void> {
-    const permissionTypeOrm = new PermissionTypeOrm();
-
-    permissionTypeOrm.id = permission.getId();
-    permissionTypeOrm.resource = permission.getResource();
-    permissionTypeOrm.action = permission.getAction();
-
-    await this.repository.save(permissionTypeOrm);
+    await this.repository.save(PermissionsMapper.toTypeOrm(permission));
   }
 
   public async delete(permission: Permission): Promise<void> {

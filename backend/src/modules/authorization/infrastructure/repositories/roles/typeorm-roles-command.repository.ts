@@ -5,6 +5,7 @@ import { RoleTypeOrm } from '../../entities/role.entity';
 import { Repository } from 'typeorm';
 import { Role } from '../../../domain/role-aggregate/role.aggregate';
 import { RoleNotFoundException } from '../../../domain/role-aggregate/exceptions/role-not-found.exception';
+import { RoleMappers } from '../../mappers/roles.mapper';
 
 @Injectable()
 export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
@@ -20,15 +21,10 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
       throw new RoleNotFoundException(id);
     }
 
-    return Role.fromPersistence(roleTypeOrm.id, roleTypeOrm.name, []);
+    return RoleMappers.toDomain(roleTypeOrm);
   }
 
   public async save(role: Role): Promise<void> {
-    const roleTypeOrm = new RoleTypeOrm();
-
-    roleTypeOrm.id = role.getId();
-    roleTypeOrm.name = role.getName();
-
-    await this.repository.save(roleTypeOrm);
+    await this.repository.save(RoleMappers.toTypeOrm(role));
   }
 }
