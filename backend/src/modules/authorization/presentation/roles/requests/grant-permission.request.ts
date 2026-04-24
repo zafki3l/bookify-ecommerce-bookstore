@@ -3,9 +3,9 @@ import { IGrantPermissionRequest } from '../../../application/role-use-cases/gra
 
 export class GrantPermissionRequest implements IGrantPermissionRequest {
   @IsString()
-  public readonly permission: string;
+  public readonly permissionId: string;
 
-  public constructor(permission: string) {
-    this.permission = permission;
+  public constructor(permissionId: string) {
+    this.permissionId = permissionId;
   }
 }

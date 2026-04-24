@@ -1,3 +1,3 @@
 export interface IGrantPermissionRequest {
-  permission: string;
+  permissionId: string;
 }

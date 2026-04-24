@@ -57,30 +57,30 @@ export class Role extends AggregateRoot {
     this.name = newName;
   }
 
-  public grantPermission(permission: string): void {
-    const isExists = this.permissions.some((p) => p === permission);
+  public grantPermission(permissionId: string): void {
+    const isExists = this.permissions.some((p) => p === permissionId);
     if (isExists) {
-      throw new PermissionAlreadyGrantedException(permission);
+      throw new PermissionAlreadyGrantedException(permissionId);
     }
 
-    this.permissions.push(permission);
+    this.permissions.push(permissionId);
 
-    this.addDomainEvent(new PermissionGranted(this.id, permission));
+    this.addDomainEvent(new PermissionGranted(this.id, permissionId));
   }
 
-  public revokePermission(permission: string): void {
-    const isExists = this.permissions.find((p) => p === permission);
+  public revokePermission(permissionId: string): void {
+    const isExists = this.permissions.find((p) => p === permissionId);
     if (!isExists) {
-      throw new PermissionNotFoundException(permission);
+      throw new PermissionNotFoundException(permissionId);
     }
 
-    this.permissions = this.permissions.filter((p) => !(p === permission));
+    this.permissions = this.permissions.filter((p) => !(p === permissionId));
 
-    this.addDomainEvent(new PermissionRevoked(this.id, permission));
+    this.addDomainEvent(new PermissionRevoked(this.id, permissionId));
   }
 
-  public hasPermission(permission): boolean {
-    return this.permissions.some((p) => p === permission);
+  public hasPermission(permissionId): boolean {
+    return this.permissions.some((p) => p === permissionId);
   }
 
   public getId(): string {

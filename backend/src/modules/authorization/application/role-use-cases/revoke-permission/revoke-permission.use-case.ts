@@ -3,7 +3,6 @@ import {
   type IRolesCommandRepository,
   ROLES_COMMAND_REPOSITORY,
 } from '../../../domain/role-aggregate/repositories/roles-command.repository.interface';
-import { IGrantPermissionRequest } from './grant-permission.request';
 import {
   type IPermissionExistsChecker,
   PERMISSION_EXISTS_CHECKER,
@@ -11,7 +10,7 @@ import {
 import { PermissionNotFoundException } from '../../../domain/role-aggregate/exceptions/permission-not-found.exception';
 
 @Injectable()
-export class GrantPermissionUseCase {
+export class RevokePermissionUseCase {
   public constructor(
     @Inject(ROLES_COMMAND_REPOSITORY)
     private readonly repository: IRolesCommandRepository,
@@ -20,23 +19,16 @@ export class GrantPermissionUseCase {
     private readonly permissionExistsChecker: IPermissionExistsChecker,
   ) {}
 
-  public async execute(
-    id: string,
-    request: IGrantPermissionRequest,
-  ): Promise<void> {
-    const isPermissionExists = await this.permissionExistsChecker.isExist(
-      request.permissionId,
-    );
-    if (!isPermissionExists) {
-      throw new PermissionNotFoundException(request.permissionId);
+  public async execute(id: string, permissionId: string): Promise<void> {
+    const permissionExistsChecker =
+      await this.permissionExistsChecker.isExist(permissionId);
+    if (!permissionExistsChecker) {
+      throw new PermissionNotFoundException(permissionId);
     }
 
     const role = await this.repository.findOne(id);
-    if (!role) {
-      return;
-    }
 
-    role.grantPermission(request.permissionId);
+    role.revokePermission(permissionId);
 
     await this.repository.save(role);
   }
