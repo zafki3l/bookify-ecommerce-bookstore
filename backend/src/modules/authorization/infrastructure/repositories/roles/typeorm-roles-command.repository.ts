@@ -9,6 +9,15 @@ import { RoleMappers } from '../../mappers/roles.mapper';
 import { RolePermissionTypeOrm } from '../../entities/role-permission.entity';
 import { PermissionGranted } from '../../../domain/role-aggregate/events/permission-granted.event';
 import { PermissionRevoked } from '../../../domain/role-aggregate/events/permission-revoked.event';
+import { AuditlogWriteService } from '../../../../audit-log/infrastructure/services/audit-log-write.service';
+import { RoleCreated } from '../../../domain/role-aggregate/events/role-created.event';
+import { RoleRenamed } from '../../../domain/role-aggregate/events/role-renamed.event';
+import { RoleCreatedHandler } from '../../event-handlers/roles/role-created.handler';
+import { RoleRenamedHandler } from '../../event-handlers/roles/role-renamed.handler';
+import { PermissionGrantedHandler } from '../../event-handlers/roles/permission-granted.handler';
+import { PermissionRevokedHandler } from '../../event-handlers/roles/permission-revoked.handler';
+import { RoleDeleted } from '../../../domain/role-aggregate/events/role-deleted.event';
+import { RoleDeletedHandler } from '../../event-handlers/roles/role-deleted.handler';
 
 @Injectable()
 export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
@@ -30,17 +39,24 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
     return RoleMappers.toDomain(roleTypeOrm);
   }
 
-  public async save(role: Role): Promise<void> {
+  public async save(role: Role, performedBy: string): Promise<void> {
     await this.repository.manager.transaction(async (manager) => {
       await manager.save(RoleMappers.toTypeOrm(role));
-
       for (const event of role.getDomainEvents()) {
+        if (event instanceof RoleCreated) {
+          await RoleCreatedHandler.handle(role, event, manager, performedBy);
+        }
+
+        if (event instanceof RoleRenamed) {
+          await RoleRenamedHandler.handle(role, event, manager, performedBy);
+        }
+
         if (event instanceof PermissionGranted) {
-          await this.grantPermission(event, manager);
+          await PermissionGrantedHandler.handle(event, manager, performedBy);
         }
 
         if (event instanceof PermissionRevoked) {
-          await this.revokePermission(event, manager);
+          await PermissionRevokedHandler.handle(event, manager, performedBy);
         }
       }
     });
@@ -48,29 +64,15 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
     role.clearDomainEvents();
   }
 
-  public async delete(role: Role): Promise<void> {
-    await this.repository.delete({ id: role.getId() });
-  }
-
-  private async grantPermission(
-    event: PermissionGranted,
-    manager: EntityManager,
-  ): Promise<void> {
-    const rolePermissionTypeOrm = new RolePermissionTypeOrm();
-
-    rolePermissionTypeOrm.roleId = event.roleId;
-    rolePermissionTypeOrm.permissionId = event.permissionId;
-
-    await manager.save(rolePermissionTypeOrm);
-  }
-
-  private async revokePermission(
-    event: PermissionRevoked,
-    manager: EntityManager,
-  ): Promise<void> {
-    await manager.delete(RolePermissionTypeOrm, {
-      roleId: event.roleId,
-      permissionId: event.permissionId,
+  public async delete(role: Role, performedBy: string): Promise<void> {
+    await this.repository.manager.transaction(async (manager) => {
+      for (const event of role.getDomainEvents()) {
+        if (event instanceof RoleDeleted) {
+          await RoleDeletedHandler.handle(event, manager, performedBy);
+        }
+      }
     });
+
+    role.clearDomainEvents();
   }
 }

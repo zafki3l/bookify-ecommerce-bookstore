@@ -12,11 +12,15 @@ export class RenameRoleUseCase {
     private readonly repository: IRolesCommandRepository,
   ) {}
 
-  public async execute(id: string, request: IRenameRoleRequest): Promise<void> {
+  public async execute(
+    id: string,
+    request: IRenameRoleRequest,
+    performedBy: string,
+  ): Promise<void> {
     const role = await this.repository.findOne(id);
 
     role.rename(request.name);
 
-    await this.repository.save(role);
+    await this.repository.save(role, performedBy);
   }
 }

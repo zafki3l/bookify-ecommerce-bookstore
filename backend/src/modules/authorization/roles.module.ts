@@ -18,12 +18,14 @@ import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission
 import { PermissionsModule } from './permissions.module';
 import { RevokePermissionUseCase } from './application/role-use-cases/revoke-permission/revoke-permission.use-case';
 import { DeleteRoleUseCase } from './application/role-use-cases/delete-role/delete-role.use-case';
+import { AuditLogModule } from '../audit-log/audit-log.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([RoleTypeOrm, RolePermissionTypeOrm]),
     SharedCacheModule,
     PermissionsModule,
+    AuditLogModule,
   ],
   controllers: [RolesController],
   providers: [

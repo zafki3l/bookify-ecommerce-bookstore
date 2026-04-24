@@ -19,7 +19,11 @@ export class RevokePermissionUseCase {
     private readonly permissionExistsChecker: IPermissionExistsChecker,
   ) {}
 
-  public async execute(id: string, permissionId: string): Promise<void> {
+  public async execute(
+    id: string,
+    permissionId: string,
+    performedBy: string,
+  ): Promise<void> {
     const permissionExistsChecker =
       await this.permissionExistsChecker.isExist(permissionId);
     if (!permissionExistsChecker) {
@@ -30,6 +34,6 @@ export class RevokePermissionUseCase {
 
     role.revokePermission(permissionId);
 
-    await this.repository.save(role);
+    await this.repository.save(role, performedBy);
   }
 }

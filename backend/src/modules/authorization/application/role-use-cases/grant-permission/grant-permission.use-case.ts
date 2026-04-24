@@ -23,6 +23,7 @@ export class GrantPermissionUseCase {
   public async execute(
     id: string,
     request: IGrantPermissionRequest,
+    performedBy: string,
   ): Promise<void> {
     const isPermissionExists = await this.permissionExistsChecker.isExist(
       request.permissionId,
@@ -38,6 +39,6 @@ export class GrantPermissionUseCase {
 
     role.grantPermission(request.permissionId);
 
-    await this.repository.save(role);
+    await this.repository.save(role, performedBy);
   }
 }

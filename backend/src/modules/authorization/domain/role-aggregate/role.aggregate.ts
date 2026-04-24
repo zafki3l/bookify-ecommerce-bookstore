@@ -1,6 +1,9 @@
 import { AggregateRoot } from '../../../../shared/domain/aggregate-root';
 import { PermissionGranted } from './events/permission-granted.event';
 import { PermissionRevoked } from './events/permission-revoked.event';
+import { RoleCreated } from './events/role-created.event';
+import { RoleDeleted } from './events/role-deleted.event';
+import { RoleRenamed } from './events/role-renamed.event';
 import { PermissionAlreadyGrantedException } from './exceptions/permission-already-granted.exception';
 import { PermissionNotGrantedException } from './exceptions/permission-not-granted.exception';
 import { RoleNameEmptyException } from './exceptions/role-name-empty.exception';
@@ -29,9 +32,13 @@ export class Role extends AggregateRoot {
     }
 
     const id = formated.replace(/\s+/g, '-'); // "Super Admin" -> "super-admin"
-
     const newName = formated.charAt(0).toUpperCase() + formated.slice(1);
-    return new Role(id, newName, []);
+
+    const role = new Role(id, newName, []);
+
+    role.addDomainEvent(new RoleCreated(id));
+
+    return role;
   }
 
   public static fromPersistence(
@@ -40,6 +47,10 @@ export class Role extends AggregateRoot {
     permissions: string[],
   ): Role {
     return new Role(id, name, permissions);
+  }
+
+  public delete(): void {
+    this.addDomainEvent(new RoleDeleted(this.id, this.getPermissions()));
   }
 
   public rename(name: string): void {
@@ -54,7 +65,10 @@ export class Role extends AggregateRoot {
     const formated = name.trim().toLowerCase();
     const newName = formated.charAt(0).toUpperCase() + formated.slice(1);
 
+    const oldName = this.name;
     this.name = newName;
+
+    this.addDomainEvent(new RoleRenamed(this.id, oldName, newName));
   }
 
   public grantPermission(permissionId: string): void {

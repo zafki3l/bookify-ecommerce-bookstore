@@ -25,6 +25,8 @@ import { DeleteRoleUseCase } from '../../application/role-use-cases/delete-role/
 
 @Controller('roles')
 export class RolesController {
+  static performedBy = '123123123312';
+
   public constructor(
     private readonly findRolesUseCase: FindRolesUseCase,
     private readonly findOneRoleUseCase: FindOneRoleUseCase,
@@ -54,7 +56,10 @@ export class RolesController {
   @Post()
   public async create(@Body() request: CreateRoleRequest): Promise<void> {
     try {
-      await this.createRoleUseCase.execute(request);
+      await this.createRoleUseCase.execute(
+        request,
+        RolesController.performedBy,
+      );
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -66,7 +71,11 @@ export class RolesController {
     @Body() request: RenameRoleRequest,
   ): Promise<void> {
     try {
-      await this.renameRoleUseCase.execute(id, request);
+      await this.renameRoleUseCase.execute(
+        id,
+        request,
+        RolesController.performedBy,
+      );
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -78,7 +87,11 @@ export class RolesController {
     @Body() request: GrantPermissionRequest,
   ): Promise<void> {
     try {
-      await this.grantPermissionUseCase.execute(id, request);
+      await this.grantPermissionUseCase.execute(
+        id,
+        request,
+        RolesController.performedBy,
+      );
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -91,7 +104,11 @@ export class RolesController {
     @Param('permissionId') permissionId: string,
   ): Promise<void> {
     try {
-      await this.revokePermissionUseCase.execute(id, permissionId);
+      await this.revokePermissionUseCase.execute(
+        id,
+        permissionId,
+        RolesController.performedBy,
+      );
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -101,7 +118,7 @@ export class RolesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async remove(@Param('id') id: string): Promise<void> {
     try {
-      await this.deleteRoleUseCase.execute(id);
+      await this.deleteRoleUseCase.execute(id, RolesController.performedBy);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
