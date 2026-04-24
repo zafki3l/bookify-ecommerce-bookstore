@@ -2,7 +2,7 @@ import { AggregateRoot } from '../../../../shared/domain/aggregate-root';
 import { PermissionGranted } from './events/permission-granted.event';
 import { PermissionRevoked } from './events/permission-revoked.event';
 import { PermissionAlreadyGrantedException } from './exceptions/permission-already-granted.exception';
-import { PermissionNotFoundException } from './exceptions/permission-not-found.exception';
+import { PermissionNotGrantedException } from './exceptions/permission-not-granted.exception';
 import { RoleNameEmptyException } from './exceptions/role-name-empty.exception';
 import { RoleNameTooLongException } from './exceptions/role-name-too-long.exception';
 
@@ -71,7 +71,7 @@ export class Role extends AggregateRoot {
   public revokePermission(permissionId: string): void {
     const isExists = this.permissions.find((p) => p === permissionId);
     if (!isExists) {
-      throw new PermissionNotFoundException(permissionId);
+      throw new PermissionNotGrantedException(this.id, permissionId);
     }
 
     this.permissions = this.permissions.filter((p) => !(p === permissionId));

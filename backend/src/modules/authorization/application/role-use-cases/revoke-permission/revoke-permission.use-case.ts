@@ -7,7 +7,7 @@ import {
   type IPermissionExistsChecker,
   PERMISSION_EXISTS_CHECKER,
 } from '../../../domain/permission-aggregate/services/permission-exists-checker.service.interface';
-import { PermissionNotFoundException } from '../../../domain/role-aggregate/exceptions/permission-not-found.exception';
+import { PermissionNotFoundException } from '../../../domain/permission-aggregate/exceptions/permission-not-found.exception';
 
 @Injectable()
 export class RevokePermissionUseCase {
