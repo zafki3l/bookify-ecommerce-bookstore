@@ -7,6 +7,11 @@ import { PERMISSIONS_QUERY_REPOSITORY } from './domain/permission-aggregate/repo
 import { TypeOrmPermissionsQueryRepository } from './infrastructure/repositories/permission/typeorm-permissions-query.repository';
 import { FindPermissionsUseCase } from './application/permission-use-cases/find-permissions/find-permissions.use-case';
 import { FindOnePermissionUseCase } from './application/permission-use-cases/find-one-permission/find-one-permission.use-case';
+import { PERMISSIONS_COMMAND_REPOSITORY } from './domain/permission-aggregate/repositories/permission-command.repository.interface';
+import { TypeOrmPermissionsCommandRepository } from './infrastructure/repositories/permission/typeorm-permissions-command.repository';
+import { CreatePermissionUseCase } from './application/permission-use-cases/create-permission/create-permission.use-case';
+import { PERMISSION_EXISTS_CHECKER } from './domain/permission-aggregate/services/permission-exists-checker.service.interface';
+import { PermissionExistsChecker } from './infrastructure/services/permissions/permission-exists-checker.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PermissionTypeOrm]), SharedCacheModule],
@@ -14,11 +19,24 @@ import { FindOnePermissionUseCase } from './application/permission-use-cases/fin
   providers: [
     FindPermissionsUseCase,
     FindOnePermissionUseCase,
+    CreatePermissionUseCase,
     {
       provide: PERMISSIONS_QUERY_REPOSITORY,
       useClass: TypeOrmPermissionsQueryRepository,
     },
+    {
+      provide: PERMISSIONS_COMMAND_REPOSITORY,
+      useClass: TypeOrmPermissionsCommandRepository,
+    },
+    {
+      provide: PERMISSION_EXISTS_CHECKER,
+      useClass: PermissionExistsChecker,
+    },
   ],
-  exports: [PERMISSIONS_QUERY_REPOSITORY],
+  exports: [
+    PERMISSIONS_QUERY_REPOSITORY,
+    PERMISSIONS_COMMAND_REPOSITORY,
+    PERMISSION_EXISTS_CHECKER,
+  ],
 })
 export class PermissionsModule {}

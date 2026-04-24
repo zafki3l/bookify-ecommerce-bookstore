@@ -1,5 +1,7 @@
 import { Action } from './enums/action.enum';
 import { Resource } from './enums/resource.enum';
+import { ActionInvalidException } from './exceptions/action-invalid.exception';
+import { ResourceInvalidException } from './exceptions/resource-invalid.exception';
 
 export class Permission {
   private constructor(
@@ -9,6 +11,16 @@ export class Permission {
   ) {}
 
   public static create(resource: Resource, action: Action): Permission {
+    const isIncludesInResource = Object.values(Resource).includes(resource);
+    if (!isIncludesInResource) {
+      throw new ResourceInvalidException(resource);
+    }
+
+    const isIncludesInAction = Object.values(Action).includes(action);
+    if (!isIncludesInAction) {
+      throw new ActionInvalidException(action);
+    }
+
     const id = `${resource}.${action}`;
 
     return new Permission(id.toLowerCase(), resource, action);
