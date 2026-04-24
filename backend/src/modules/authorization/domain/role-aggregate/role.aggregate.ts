@@ -1,5 +1,3 @@
-import { Action } from '../permission-aggregate/enums/action.enum';
-import { Resource } from '../permission-aggregate/enums/resource.enum';
 import { PermissionAlreadyGrantedException } from './exceptions/permission-already-granted.exception';
 import { PermissionNotFoundException } from './exceptions/permission-not-found.exception';
 import { RoleNameEmptyException } from './exceptions/role-name-empty.exception';

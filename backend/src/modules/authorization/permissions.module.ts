@@ -12,6 +12,7 @@ import { TypeOrmPermissionsCommandRepository } from './infrastructure/repositori
 import { CreatePermissionUseCase } from './application/permission-use-cases/create-permission/create-permission.use-case';
 import { PERMISSION_EXISTS_CHECKER } from './domain/permission-aggregate/services/permission-exists-checker.service.interface';
 import { PermissionExistsChecker } from './infrastructure/services/permissions/permission-exists-checker.service';
+import { DeletePermissionUseCase } from './application/permission-use-cases/delete-permission/delete-permission.use-case';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PermissionTypeOrm]), SharedCacheModule],
@@ -20,6 +21,7 @@ import { PermissionExistsChecker } from './infrastructure/services/permissions/p
     FindPermissionsUseCase,
     FindOnePermissionUseCase,
     CreatePermissionUseCase,
+    DeletePermissionUseCase,
     {
       provide: PERMISSIONS_QUERY_REPOSITORY,
       useClass: TypeOrmPermissionsQueryRepository,

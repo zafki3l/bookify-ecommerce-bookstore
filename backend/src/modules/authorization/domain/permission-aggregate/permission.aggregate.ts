@@ -28,10 +28,10 @@ export class Permission {
 
   public static fromPersistent(
     id: string,
-    resource: Resource,
-    action: Action,
+    resource: string,
+    action: string,
   ): Permission {
-    return new Permission(id, resource, action);
+    return new Permission(id, resource as Resource, action as Action);
   }
 
   public getId(): string {

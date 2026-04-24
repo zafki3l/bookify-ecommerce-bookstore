@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PermissionTypeOrm } from '../../entities/permission.entity';
 import { Repository } from 'typeorm';
 import { Permission } from '../../../domain/permission-aggregate/permission.aggregate';
+import { PermissionNotFoundException } from '../../../domain/permission-aggregate/exceptions/permission-not-found.exception';
 
 @Injectable()
 export class TypeOrmPermissionsCommandRepository implements IPermissionsCommandRepository {
@@ -11,6 +12,20 @@ export class TypeOrmPermissionsCommandRepository implements IPermissionsCommandR
     @InjectRepository(PermissionTypeOrm)
     private readonly repository: Repository<PermissionTypeOrm>,
   ) {}
+
+  public async findOne(id: string): Promise<Permission> {
+    const permissionTypeOrm = await this.repository.findOne({ where: { id } });
+
+    if (!permissionTypeOrm) {
+      throw new PermissionNotFoundException(id);
+    }
+
+    return Permission.fromPersistent(
+      permissionTypeOrm.id,
+      permissionTypeOrm.resource,
+      permissionTypeOrm.action,
+    );
+  }
 
   public async save(permission: Permission): Promise<void> {
     const permissionTypeOrm = new PermissionTypeOrm();
@@ -20,5 +35,9 @@ export class TypeOrmPermissionsCommandRepository implements IPermissionsCommandR
     permissionTypeOrm.action = permission.getAction();
 
     await this.repository.save(permissionTypeOrm);
+  }
+
+  public async delete(permission: Permission): Promise<void> {
+    await this.repository.delete({ id: permission.getId() });
   }
 }
