@@ -1,8 +1,0 @@
-export class ResourceErrorCode {
-  public static RESOURCE_EXISTS = 'RESOURCE_EXISTS';
-  public static RESOURCE_ID_EMPTY = 'RESOURCE_ID_EMPTY';
-  public static RESOURCE_ID_TOO_LONG = 'RESOURCE_ID_TOO_LONG';
-  public static RESOURCE_NAME_EMPTY = 'RESOURCE_NAME_EMPTY';
-  public static RESOURCE_NAME_TOO_LONG = 'RESOURCE_NAME_TOO_LONG';
-  public static RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND';
-}

@@ -2,26 +2,38 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleTypeOrm } from './infrastructure/entities/role.entity';
 import { SharedCacheModule } from '../../shared/cache/cache.module';
-import { ROLES_QUERY_REPOSITORY } from './domain/repositories/roles/roles-query.repository.interface';
+import { ROLES_QUERY_REPOSITORY } from './domain/role-aggregate/repositories/roles-query.repository.interface';
 import { TypeOrmRolesQueryRepository } from './infrastructure/repositories/roles/typeorm-roles-query.repository';
-import { ROLES_COMMAND_REPOSITORY } from './domain/repositories/roles/roles-command.repository.interface';
+import { FindRolesUseCase } from './application/role-use-cases/find-roles/find-roles.use-case';
+import { FindOneRoleUseCase } from './application/role-use-cases/find-one-role/find-one-role.use-case';
+import { ROLES_COMMAND_REPOSITORY } from './domain/role-aggregate/repositories/roles-command.repository.interface';
 import { TypeOrmRolesCommandRepository } from './infrastructure/repositories/roles/typeorm-roles-command.repository';
-import { FindRolesHandler } from './application/queries/roles/find-roles.handler';
-import { FindOneRoleHandler } from './application/queries/roles/find-one-role.handler';
-import { CreateRoleHandler } from './application/commands/roles/create-role.handler';
-import { ROLE_EXISTS_CHECKER } from './domain/services/roles/role-exists-checker.service';
+import { CreateRoleUseCase } from './application/role-use-cases/create-role/create-role.use-case';
+import { ROLE_EXISTS_CHECKER } from './domain/role-aggregate/services/role-exists-checker.service.interface';
 import { RoleExistsChecker } from './infrastructure/services/roles/role-exists-checker.service';
-import { UpdateRoleHandler } from './application/commands/roles/update-role.handler';
-import { DeleteRoleHandler } from './application/commands/roles/delete-role.handler';
+import { RenameRoleUseCase } from './application/role-use-cases/rename-role/rename-role.use-case';
+import { RolesController } from './presentation/roles/roles.controller';
+import { GrantPermissionUseCase } from './application/role-use-cases/grant-permission/grant-permission.use-case';
+import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission.entity';
+import { PermissionsModule } from './permissions.module';
+import { RevokePermissionUseCase } from './application/role-use-cases/revoke-permission/revoke-permission.use-case';
+import { DeleteRoleUseCase } from './application/role-use-cases/delete-role/delete-role.use-case';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RoleTypeOrm]), SharedCacheModule],
+  imports: [
+    TypeOrmModule.forFeature([RoleTypeOrm, RolePermissionTypeOrm]),
+    SharedCacheModule,
+    PermissionsModule,
+  ],
+  controllers: [RolesController],
   providers: [
-    CreateRoleHandler,
-    UpdateRoleHandler,
-    DeleteRoleHandler,
-    FindRolesHandler,
-    FindOneRoleHandler,
+    FindRolesUseCase,
+    FindOneRoleUseCase,
+    CreateRoleUseCase,
+    RenameRoleUseCase,
+    GrantPermissionUseCase,
+    RevokePermissionUseCase,
+    DeleteRoleUseCase,
     {
       provide: ROLES_QUERY_REPOSITORY,
       useClass: TypeOrmRolesQueryRepository,

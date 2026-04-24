@@ -1,21 +1,49 @@
+import { Injectable } from '@nestjs/common';
+import { IRolesQueryRepository } from '../../../domain/role-aggregate/repositories/roles-query.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IRolesQueryRepository } from '../../../domain/repositories/roles/roles-query.repository.interface';
 import { RoleTypeOrm } from '../../entities/role.entity';
 import { Repository } from 'typeorm';
+import { RoleReadModel } from '../../../domain/role-aggregate/read-models/role.read-model';
 
+@Injectable()
 export class TypeOrmRolesQueryRepository implements IRolesQueryRepository {
-  constructor(
+  public constructor(
     @InjectRepository(RoleTypeOrm)
     private readonly repository: Repository<RoleTypeOrm>,
   ) {}
 
-  async find(): Promise<{ id: string; name: string }[]> {
-    return await this.repository.find();
+  public async findAll(): Promise<RoleReadModel[]> {
+    const roles = await this.repository.find({
+      relations: {
+        rolePermissions: true,
+      },
+    });
+
+    return roles.map((role) => {
+      const permissions = role.rolePermissions.map(
+        (rolePermission) => rolePermission.permissionId,
+      );
+
+      return new RoleReadModel(role.id, role.name, permissions);
+    });
   }
 
-  async findOne(id: string): Promise<{ id: string; name: string } | null> {
-    const role = await this.repository.findOne({ where: { id } });
+  public async findOne(id: string): Promise<RoleReadModel | null> {
+    const role = await this.repository.findOne({
+      where: { id },
+      relations: {
+        rolePermissions: true,
+      },
+    });
 
-    return role ? role : null;
+    if (!role) {
+      return null;
+    }
+
+    const permissions = role.rolePermissions.map(
+      (rolePermission) => rolePermission.permissionId,
+    );
+
+    return new RoleReadModel(role.id, role.name, permissions);
   }
 }

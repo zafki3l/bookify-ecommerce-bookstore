@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { RolePermissionTypeOrm } from './role-permission.entity';
 
 @Entity('roles')
 export class RoleTypeOrm {
@@ -7,4 +8,7 @@ export class RoleTypeOrm {
 
   @Column({ type: 'varchar', length: 50 })
   name!: string;
+
+  @OneToMany(() => RolePermissionTypeOrm, (rp) => rp.role)
+  rolePermissions!: RolePermissionTypeOrm[];
 }

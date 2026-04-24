@@ -1,12 +1,15 @@
-import { Role } from '../../domain/entities/role.entity';
+import { Role } from '../../domain/role-aggregate/role.aggregate';
 import { RoleTypeOrm } from '../entities/role.entity';
 
-export class RolesMapper {
-  static toDomain(roleTypeOrm: RoleTypeOrm): Role {
-    return Role.fromPersistent(roleTypeOrm.id, roleTypeOrm.name);
+export class RoleMappers {
+  public static toDomain(roleTypeOrm: RoleTypeOrm): Role {
+    const permissions =
+      roleTypeOrm.rolePermissions?.map((rp) => rp.permissionId) ?? [];
+
+    return Role.fromPersistence(roleTypeOrm.id, roleTypeOrm.name, permissions);
   }
 
-  static toModel(role: Role): RoleTypeOrm {
+  public static toTypeOrm(role: Role): RoleTypeOrm {
     const roleTypeOrm = new RoleTypeOrm();
 
     roleTypeOrm.id = role.getId();

@@ -1,4 +1,4 @@
-import { DomainException } from '../../../../shared/exception/domain.exception';
+import { DomainException } from '../../../../shared/domain/exception/domain.exception';
 import { AuditLogErrorCode } from './audit-log-error-code';
 
 export class AuditLogPerfomedByEmptyException extends DomainException {

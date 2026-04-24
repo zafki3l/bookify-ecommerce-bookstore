@@ -1,21 +1,21 @@
-import { Permission } from '../../domain/entities/permission.entity';
+import { Permission } from '../../domain/permission-aggregate/permission.aggregate';
 import { PermissionTypeOrm } from '../entities/permission.entity';
 
 export class PermissionsMapper {
-  static toDomain(permissionTypeOrm: PermissionTypeOrm): Permission {
+  public static toDomain(permissionTypeOrm: PermissionTypeOrm): Permission {
     return Permission.fromPersistent(
       permissionTypeOrm.id,
-      permissionTypeOrm.resourceId,
-      permissionTypeOrm.actionId,
+      permissionTypeOrm.resource,
+      permissionTypeOrm.action,
     );
   }
 
-  static toModel(permission: Permission): PermissionTypeOrm {
+  public static toTypeOrm(permission: Permission): PermissionTypeOrm {
     const permissionTypeOrm = new PermissionTypeOrm();
 
     permissionTypeOrm.id = permission.getId();
-    permissionTypeOrm.resourceId = permission.getResourceId();
-    permissionTypeOrm.actionId = permission.getActionId();
+    permissionTypeOrm.resource = permission.getResource();
+    permissionTypeOrm.action = permission.getAction();
 
     return permissionTypeOrm;
   }

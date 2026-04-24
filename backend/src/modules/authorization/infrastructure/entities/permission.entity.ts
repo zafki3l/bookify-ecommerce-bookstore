@@ -1,31 +1,18 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-  Unique,
-} from 'typeorm';
-import { ResourceTypeOrm } from './resource.entity';
-import { ActionTypeOrm } from './action.entity';
+import { Column, Entity, OneToMany, PrimaryColumn, Unique } from 'typeorm';
+import { RolePermissionTypeOrm } from './role-permission.entity';
 
 @Entity('permissions')
-@Unique(['resourceId', 'actionId'])
+@Unique(['resource', 'action'])
 export class PermissionTypeOrm {
   @PrimaryColumn({ type: 'varchar', length: 50 })
   id!: string;
 
   @Column({ type: 'varchar', length: 50 })
-  resourceId!: string;
+  resource!: string;
 
   @Column({ type: 'varchar', length: 50 })
-  actionId!: string;
+  action!: string;
 
-  @ManyToOne(() => ResourceTypeOrm)
-  @JoinColumn({ name: 'resourceId' })
-  resource!: ResourceTypeOrm;
-
-  @ManyToOne(() => ActionTypeOrm)
-  @JoinColumn({ name: 'actionId' })
-  action!: ActionTypeOrm;
+  @OneToMany(() => RolePermissionTypeOrm, (rp) => rp.permission)
+  rolePermissions!: RolePermissionTypeOrm[];
 }

@@ -1,32 +1,76 @@
+import { Injectable } from '@nestjs/common';
+import { IRolesCommandRepository } from '../../../domain/role-aggregate/repositories/roles-command.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IRolesCommandRepository } from '../../../domain/repositories/roles/roles-command.repository.interface';
 import { RoleTypeOrm } from '../../entities/role.entity';
-import { Repository } from 'typeorm';
-import { Role } from '../../../domain/entities/role.entity';
-import { RolesMapper } from '../../mappers/roles.mapper';
-import { RoleNotFoundException } from '../../../domain/exceptions/roles/role-not-found.exception';
+import { EntityManager, Repository } from 'typeorm';
+import { Role } from '../../../domain/role-aggregate/role.aggregate';
+import { RoleNotFoundException } from '../../../domain/role-aggregate/exceptions/role-not-found.exception';
+import { RoleMappers } from '../../mappers/roles.mapper';
+import { RolePermissionTypeOrm } from '../../entities/role-permission.entity';
+import { PermissionGranted } from '../../../domain/role-aggregate/events/permission-granted.event';
+import { PermissionRevoked } from '../../../domain/role-aggregate/events/permission-revoked.event';
 
+@Injectable()
 export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
-  constructor(
+  public constructor(
     @InjectRepository(RoleTypeOrm)
     private readonly repository: Repository<RoleTypeOrm>,
   ) {}
 
-  async findById(id: string): Promise<Role> {
-    const role = await this.repository.findOne({ where: { id } });
+  public async findOne(id: string): Promise<Role> {
+    const roleTypeOrm = await this.repository.findOne({
+      where: { id },
+      relations: { rolePermissions: true },
+    });
 
-    if (!role) {
+    if (!roleTypeOrm) {
       throw new RoleNotFoundException(id);
     }
 
-    return RolesMapper.toDomain(role);
+    return RoleMappers.toDomain(roleTypeOrm);
   }
 
-  async save(role: Role): Promise<void> {
-    await this.repository.save(RolesMapper.toModel(role));
+  public async save(role: Role): Promise<void> {
+    await this.repository.manager.transaction(async (manager) => {
+      await manager.save(RoleMappers.toTypeOrm(role));
+
+      for (const event of role.getDomainEvents()) {
+        if (event instanceof PermissionGranted) {
+          await this.grantPermission(event, manager);
+        }
+
+        if (event instanceof PermissionRevoked) {
+          await this.revokePermission(event, manager);
+        }
+      }
+    });
+
+    role.clearDomainEvents();
   }
 
-  async delete(role: Role): Promise<void> {
+  public async delete(role: Role): Promise<void> {
     await this.repository.delete({ id: role.getId() });
+  }
+
+  private async grantPermission(
+    event: PermissionGranted,
+    manager: EntityManager,
+  ): Promise<void> {
+    const rolePermissionTypeOrm = new RolePermissionTypeOrm();
+
+    rolePermissionTypeOrm.roleId = event.roleId;
+    rolePermissionTypeOrm.permissionId = event.permissionId;
+
+    await manager.save(rolePermissionTypeOrm);
+  }
+
+  private async revokePermission(
+    event: PermissionRevoked,
+    manager: EntityManager,
+  ): Promise<void> {
+    await manager.delete(RolePermissionTypeOrm, {
+      roleId: event.roleId,
+      permissionId: event.permissionId,
+    });
   }
 }

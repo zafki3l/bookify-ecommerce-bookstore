@@ -2,37 +2,32 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PermissionTypeOrm } from './infrastructure/entities/permission.entity';
 import { SharedCacheModule } from '../../shared/cache/cache.module';
-import { PERMISSIONS_QUERY_REPOSITORY } from './domain/repositories/permissions/permissions-query.repository.interface';
-import { TypeOrmPermissionsQueryRepository } from './infrastructure/repositories/permissions/typeorm-permissions-query.repository';
-import { PERMISSION_COMMAND_REPOSITORY } from './domain/repositories/permissions/permissions-command.repository.interface';
-import { TypeOrmPermissionsCommandRepository } from './infrastructure/repositories/permissions/typeorm-permissions-command.repository';
-import { FindPermissionsHandler } from './application/queries/permissions/find-permissions.handler';
-import { CreatePermissionHandler } from './application/commands/permissions/create-permission.handler';
-import { PERMISSION_EXISTS_CHECKER } from './domain/services/permissions/permission-exists-checker.service';
+import { PermissionsController } from './presentation/permissions/permissions.controller';
+import { PERMISSIONS_QUERY_REPOSITORY } from './domain/permission-aggregate/repositories/permission-query.repository.interface';
+import { TypeOrmPermissionsQueryRepository } from './infrastructure/repositories/permission/typeorm-permissions-query.repository';
+import { FindPermissionsUseCase } from './application/permission-use-cases/find-permissions/find-permissions.use-case';
+import { FindOnePermissionUseCase } from './application/permission-use-cases/find-one-permission/find-one-permission.use-case';
+import { PERMISSIONS_COMMAND_REPOSITORY } from './domain/permission-aggregate/repositories/permission-command.repository.interface';
+import { TypeOrmPermissionsCommandRepository } from './infrastructure/repositories/permission/typeorm-permissions-command.repository';
+import { CreatePermissionUseCase } from './application/permission-use-cases/create-permission/create-permission.use-case';
+import { PERMISSION_EXISTS_CHECKER } from './domain/permission-aggregate/services/permission-exists-checker.service.interface';
 import { PermissionExistsChecker } from './infrastructure/services/permissions/permission-exists-checker.service';
-import { ResourcesModule } from './resources.module';
-import { ActionsModule } from './actions.module';
-import { FindOnePermissionHandler } from './application/queries/permissions/find-one-permission.handler';
-import { DeletePermissionHandler } from './application/commands/permissions/delete-permission.handler';
+import { DeletePermissionUseCase } from './application/permission-use-cases/delete-permission/delete-permission.use-case';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([PermissionTypeOrm]),
-    SharedCacheModule,
-    ResourcesModule,
-    ActionsModule,
-  ],
+  imports: [TypeOrmModule.forFeature([PermissionTypeOrm]), SharedCacheModule],
+  controllers: [PermissionsController],
   providers: [
-    CreatePermissionHandler,
-    DeletePermissionHandler,
-    FindPermissionsHandler,
-    FindOnePermissionHandler,
+    FindPermissionsUseCase,
+    FindOnePermissionUseCase,
+    CreatePermissionUseCase,
+    DeletePermissionUseCase,
     {
       provide: PERMISSIONS_QUERY_REPOSITORY,
       useClass: TypeOrmPermissionsQueryRepository,
     },
     {
-      provide: PERMISSION_COMMAND_REPOSITORY,
+      provide: PERMISSIONS_COMMAND_REPOSITORY,
       useClass: TypeOrmPermissionsCommandRepository,
     },
     {
@@ -42,7 +37,7 @@ import { DeletePermissionHandler } from './application/commands/permissions/dele
   ],
   exports: [
     PERMISSIONS_QUERY_REPOSITORY,
-    PERMISSION_COMMAND_REPOSITORY,
+    PERMISSIONS_COMMAND_REPOSITORY,
     PERMISSION_EXISTS_CHECKER,
   ],
 })
