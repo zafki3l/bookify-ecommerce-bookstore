@@ -1,4 +1,4 @@
-export class PermissionReadModel {
+export class FindPermissionsResponse {
   public constructor(
     public readonly id: string,
     public readonly resource: string,

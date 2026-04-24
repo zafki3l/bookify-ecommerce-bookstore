@@ -7,7 +7,7 @@ import { TypeOrmRolesQueryRepository } from './infrastructure/repositories/roles
 import { FindRolesUseCase } from './application/role-use-cases/find-roles/find-roles.use-case';
 import { FindOneRoleUseCase } from './application/role-use-cases/find-one-role/find-one-role.use-case';
 import { ROLES_COMMAND_REPOSITORY } from './domain/role-aggregate/repositories/roles-command.repository.interface';
-import { TypeOrmRolesCommandRepository } from './infrastructure/repositories/roles/typeorm-roles.command.repository';
+import { TypeOrmRolesCommandRepository } from './infrastructure/repositories/roles/typeorm-roles-command.repository';
 import { CreateRoleUseCase } from './application/role-use-cases/create-role/create-role.use-case';
 import { ROLE_EXISTS_CHECKER } from './domain/role-aggregate/services/role-exists-checker.service.interface';
 import { RoleExistsChecker } from './infrastructure/services/roles/role-exists-checker.service';

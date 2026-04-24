@@ -8,25 +8,22 @@ import {
   Param,
   Post,
 } from '@nestjs/common';
-import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { FindPermissionsUseCase } from '../../application/permission-use-cases/find-permissions/find-permissions.use-case';
+import { FindPermissionsResponse } from '../../application/permission-use-cases/find-permissions/find-permissions.response';
 
 @Controller('permissions')
 export class PermissionsController {
-  constructor(
-    private readonly commandBus: CommandBus,
-    private readonly queryBus: QueryBus,
+  public constructor(
+    private readonly findPermissionsUseCase: FindPermissionsUseCase,
   ) {}
 
   @Get()
-  async findAll() {}
+  public async findAll(): Promise<FindPermissionsResponse[]> {
+    const permissions = await this.findPermissionsUseCase.execute();
+
+    return permissions;
+  }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {}
-
-  @Post()
-  async create(@Body() dto: any) {}
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id') id: string) {}
+  public async findOne(@Param('id') id: string) {}
 }
