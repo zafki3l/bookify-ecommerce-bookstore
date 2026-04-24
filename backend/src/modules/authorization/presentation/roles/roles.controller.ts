@@ -21,6 +21,7 @@ import { GrantPermissionRequest } from './requests/grant-permission.request';
 import { GrantPermissionUseCase } from '../../application/role-use-cases/grant-permission/grant-permission.use-case';
 import ExceptionHandler from '../../../../shared/domain/exception/exception.handler';
 import { RevokePermissionUseCase } from '../../application/role-use-cases/revoke-permission/revoke-permission.use-case';
+import { DeleteRoleUseCase } from '../../application/role-use-cases/delete-role/delete-role.use-case';
 
 @Controller('roles')
 export class RolesController {
@@ -31,6 +32,7 @@ export class RolesController {
     private readonly renameRoleUseCase: RenameRoleUseCase,
     private readonly grantPermissionUseCase: GrantPermissionUseCase,
     private readonly revokePermissionUseCase: RevokePermissionUseCase,
+    private readonly deleteRoleUseCase: DeleteRoleUseCase,
   ) {}
 
   @Get()
@@ -90,6 +92,16 @@ export class RolesController {
   ): Promise<void> {
     try {
       await this.revokePermissionUseCase.execute(id, permissionId);
+    } catch (error) {
+      ExceptionHandler.handle(error);
+    }
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async remove(@Param('id') id: string): Promise<void> {
+    try {
+      await this.deleteRoleUseCase.execute(id);
     } catch (error) {
       ExceptionHandler.handle(error);
     }

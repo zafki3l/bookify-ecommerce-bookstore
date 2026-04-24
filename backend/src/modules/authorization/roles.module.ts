@@ -17,6 +17,7 @@ import { GrantPermissionUseCase } from './application/role-use-cases/grant-permi
 import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission.entity';
 import { PermissionsModule } from './permissions.module';
 import { RevokePermissionUseCase } from './application/role-use-cases/revoke-permission/revoke-permission.use-case';
+import { DeleteRoleUseCase } from './application/role-use-cases/delete-role/delete-role.use-case';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RevokePermissionUseCase } from './application/role-use-cases/revoke-per
     RenameRoleUseCase,
     GrantPermissionUseCase,
     RevokePermissionUseCase,
+    DeleteRoleUseCase,
     {
       provide: ROLES_QUERY_REPOSITORY,
       useClass: TypeOrmRolesQueryRepository,

@@ -14,10 +14,6 @@ export class DeletePermissionUseCase {
   public async execute(id: string): Promise<void> {
     const permission = await this.repository.findOne(id);
 
-    if (!permission) {
-      return;
-    }
-
     await this.repository.delete(permission);
   }
 }
