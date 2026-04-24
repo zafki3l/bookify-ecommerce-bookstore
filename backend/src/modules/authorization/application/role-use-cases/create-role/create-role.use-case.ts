@@ -21,7 +21,10 @@ export class CreateRoleUseCase {
     private readonly roleExistChecker: IRoleExistsChecker,
   ) {}
 
-  public async execute(request: ICreateRoleRequest): Promise<void> {
+  public async execute(
+    request: ICreateRoleRequest,
+    performedBy: string,
+  ): Promise<void> {
     const role = Role.create(request.name);
 
     const isExists = await this.roleExistChecker.isExist(role.getId());
@@ -29,6 +32,6 @@ export class CreateRoleUseCase {
       throw new RoleAlreadyExistsException(role.getId());
     }
 
-    await this.repository.save(role);
+    await this.repository.save(role, performedBy);
   }
 }

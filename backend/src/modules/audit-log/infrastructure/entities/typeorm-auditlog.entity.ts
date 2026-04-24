@@ -17,7 +17,7 @@ export class AuditLogTypeOrm {
   module!: string;
 
   @Column({ nullable: true })
-  resourceId!: string;
+  resource!: string;
 
   @Column()
   performedBy!: string;
