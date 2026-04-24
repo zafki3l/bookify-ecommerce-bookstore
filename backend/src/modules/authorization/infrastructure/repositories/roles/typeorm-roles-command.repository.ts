@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { IRolesCommandRepository } from '../../../domain/role-aggregate/repositories/roles-command.repository.interface';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleTypeOrm } from '../../entities/role.entity';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Role } from '../../../domain/role-aggregate/role.aggregate';
 import { RoleNotFoundException } from '../../../domain/role-aggregate/exceptions/role-not-found.exception';
 import { RoleMappers } from '../../mappers/roles.mapper';
@@ -36,19 +36,11 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
 
       for (const event of role.getDomainEvents()) {
         if (event instanceof PermissionGranted) {
-          const rolePermissionTypeOrm = new RolePermissionTypeOrm();
-
-          rolePermissionTypeOrm.roleId = event.roleId;
-          rolePermissionTypeOrm.permissionId = event.permissionId;
-
-          await manager.save(rolePermissionTypeOrm);
+          await this.grantPermission(event, manager);
         }
 
         if (event instanceof PermissionRevoked) {
-          await manager.delete(RolePermissionTypeOrm, {
-            roleId: event.roleId,
-            permissionId: event.permissionId,
-          });
+          await this.revokePermission(event, manager);
         }
       }
     });
@@ -58,5 +50,27 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
 
   public async delete(role: Role): Promise<void> {
     await this.repository.delete({ id: role.getId() });
+  }
+
+  private async grantPermission(
+    event: PermissionGranted,
+    manager: EntityManager,
+  ): Promise<void> {
+    const rolePermissionTypeOrm = new RolePermissionTypeOrm();
+
+    rolePermissionTypeOrm.roleId = event.roleId;
+    rolePermissionTypeOrm.permissionId = event.permissionId;
+
+    await manager.save(rolePermissionTypeOrm);
+  }
+
+  private async revokePermission(
+    event: PermissionRevoked,
+    manager: EntityManager,
+  ): Promise<void> {
+    await manager.delete(RolePermissionTypeOrm, {
+      roleId: event.roleId,
+      permissionId: event.permissionId,
+    });
   }
 }

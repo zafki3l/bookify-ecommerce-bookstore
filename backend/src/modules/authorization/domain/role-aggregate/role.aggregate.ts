@@ -64,6 +64,7 @@ export class Role extends AggregateRoot {
     }
 
     this.permissions.push(permission);
+
     this.addDomainEvent(new PermissionGranted(this.id, permission));
   }
 
@@ -74,6 +75,7 @@ export class Role extends AggregateRoot {
     }
 
     this.permissions = this.permissions.filter((p) => !(p === permission));
+
     this.addDomainEvent(new PermissionRevoked(this.id, permission));
   }
 

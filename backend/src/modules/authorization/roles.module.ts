@@ -15,11 +15,13 @@ import { RenameRoleUseCase } from './application/role-use-cases/rename-role/rena
 import { RolesController } from './presentation/roles/roles.controller';
 import { GrantPermissionUseCase } from './application/role-use-cases/grant-permission/grant-permission.use-case';
 import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission.entity';
+import { PermissionsModule } from './permissions.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([RoleTypeOrm, RolePermissionTypeOrm]),
     SharedCacheModule,
+    PermissionsModule,
   ],
   controllers: [RolesController],
   providers: [
