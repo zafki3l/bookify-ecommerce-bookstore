@@ -8,6 +8,8 @@ import { PermissionNotFoundException } from '../../../domain/permission-aggregat
 import { PermissionsMapper } from '../../mappers/permissions.mapper';
 import { PermissionCreated } from '../../../domain/permission-aggregate/events/permission-created.event';
 import { PermissionCreatedHandler } from '../../event-handlers/permissions/permission-created.handler';
+import { PermissionDeleted } from '../../../domain/permission-aggregate/events/permission-deleted.event';
+import { PermissionDeletedHandler } from '../../event-handlers/permissions/permission-deleted.handler';
 
 @Injectable()
 export class TypeOrmPermissionsCommandRepository implements IPermissionsCommandRepository {
@@ -44,7 +46,16 @@ export class TypeOrmPermissionsCommandRepository implements IPermissionsCommandR
     });
   }
 
-  public async delete(permission: Permission): Promise<void> {
-    await this.repository.delete({ id: permission.getId() });
+  public async delete(
+    permission: Permission,
+    performedBy: string,
+  ): Promise<void> {
+    await this.repository.manager.transaction(async (manager) => {
+      for (const event of permission.getDomainEvents()) {
+        if (event instanceof PermissionDeleted) {
+          await PermissionDeletedHandler.handle(event, manager, performedBy);
+        }
+      }
+    });
   }
 }

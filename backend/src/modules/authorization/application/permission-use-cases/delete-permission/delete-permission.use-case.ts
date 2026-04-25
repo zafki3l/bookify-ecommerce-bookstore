@@ -11,9 +11,11 @@ export class DeletePermissionUseCase {
     private readonly repository: IPermissionsCommandRepository,
   ) {}
 
-  public async execute(id: string): Promise<void> {
+  public async execute(id: string, performedBy: string): Promise<void> {
     const permission = await this.repository.findOne(id);
 
-    await this.repository.delete(permission);
+    permission.delete();
+
+    await this.repository.delete(permission, performedBy);
   }
 }

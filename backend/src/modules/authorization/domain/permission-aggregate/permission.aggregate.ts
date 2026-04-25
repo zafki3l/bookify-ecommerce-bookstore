@@ -2,6 +2,7 @@ import { AggregateRoot } from '../../../../shared/domain/aggregate-root';
 import { Action } from './enums/action.enum';
 import { Resource } from './enums/resource.enum';
 import { PermissionCreated } from './events/permission-created.event';
+import { PermissionDeleted } from './events/permission-deleted.event';
 import { ActionInvalidException } from './exceptions/action-invalid.exception';
 import { ResourceInvalidException } from './exceptions/resource-invalid.exception';
 
@@ -40,6 +41,10 @@ export class Permission extends AggregateRoot {
     action: string,
   ): Permission {
     return new Permission(id, resource as Resource, action as Action);
+  }
+
+  public delete() {
+    this.addDomainEvent(new PermissionDeleted(this.id));
   }
 
   public getId(): string {

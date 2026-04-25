@@ -59,7 +59,10 @@ export class PermissionsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async remove(@Param('id') id: string): Promise<void> {
     try {
-      await this.deletePermissionUseCase.execute(id);
+      await this.deletePermissionUseCase.execute(
+        id,
+        PermissionsController.performedBy,
+      );
     } catch (error) {
       ExceptionHandler.handle(error);
     }
