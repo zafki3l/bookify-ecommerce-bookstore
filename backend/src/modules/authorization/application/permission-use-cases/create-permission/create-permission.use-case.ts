@@ -19,7 +19,7 @@ export class CreatePermissionUseCase {
     private readonly permissionExistsChecker: PermissionExistsChecker,
   ) {}
 
-  public async execute(request: ICreatePermissionRequest) {
+  public async execute(request: ICreatePermissionRequest, performedBy: string) {
     const permission = Permission.create(request.resource, request.action);
 
     const isExists = await this.permissionExistsChecker.isExist(
@@ -29,6 +29,6 @@ export class CreatePermissionUseCase {
       throw new PermissionAlreadyExistsException(permission.getId());
     }
 
-    await this.repository.save(permission);
+    await this.repository.save(permission, performedBy);
   }
 }

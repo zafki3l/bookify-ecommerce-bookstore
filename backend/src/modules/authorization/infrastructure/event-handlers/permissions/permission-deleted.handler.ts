@@ -1,17 +1,17 @@
 import { EntityManager } from 'typeorm';
+import { PermissionDeleted } from '../../../domain/permission-aggregate/events/permission-deleted.event';
 import { AuditlogWriteService } from '../../../../audit-log/infrastructure/services/audit-log-write.service';
-import { RoleDeleted } from '../../../domain/role-aggregate/events/role-deleted.event';
-import { RoleTypeOrm } from '../../entities/role.entity';
 import { RolePermissionTypeOrm } from '../../entities/role-permission.entity';
+import { PermissionTypeOrm } from '../../entities/permission.entity';
 
-export class RoleDeletedHandler {
+export class PermissionDeletedHandler {
   public static async handle(
-    event: RoleDeleted,
+    event: PermissionDeleted,
     manager: EntityManager,
     performedBy: string,
   ): Promise<void> {
     const rolePermissions = await manager.find(RolePermissionTypeOrm, {
-      where: { roleId: event.id },
+      where: { permissionId: event.id },
     });
 
     for (const rolePermission of rolePermissions) {
@@ -30,15 +30,15 @@ export class RoleDeletedHandler {
       );
     }
 
-    await manager.delete(RoleTypeOrm, { id: event.id });
+    await manager.delete(PermissionTypeOrm, { id: event.id });
 
     await AuditlogWriteService.write(
       manager,
-      'DELETE_ROLE',
+      'DELETE_PERMISSION',
       performedBy,
       'authorization',
-      'roles',
-      { id: event.id, permissionRevoked: event.permissionsRevoked },
+      'permissions',
+      { id: event.id },
     );
   }
 }

@@ -41,7 +41,6 @@ export class TypeOrmRolesCommandRepository implements IRolesCommandRepository {
 
   public async save(role: Role, performedBy: string): Promise<void> {
     await this.repository.manager.transaction(async (manager) => {
-      await manager.save(RoleMappers.toTypeOrm(role));
       for (const event of role.getDomainEvents()) {
         if (event instanceof RoleCreated) {
           await RoleCreatedHandler.handle(role, event, manager, performedBy);

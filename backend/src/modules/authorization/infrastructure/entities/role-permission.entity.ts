@@ -10,21 +10,11 @@ export class RolePermissionTypeOrm {
   @PrimaryColumn({ type: 'varchar', length: 50 })
   permissionId!: string;
 
-  @ManyToOne(() => RoleTypeOrm, (role) => role.rolePermissions, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-  })
+  @ManyToOne(() => RoleTypeOrm)
   @JoinColumn({ name: 'roleId' })
   role!: RoleTypeOrm;
 
-  @ManyToOne(
-    () => PermissionTypeOrm,
-    (permission) => permission.rolePermissions,
-    {
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
-  )
+  @ManyToOne(() => PermissionTypeOrm)
   @JoinColumn({ name: 'permissionId' })
   permission!: PermissionTypeOrm;
 }
