@@ -43,12 +43,6 @@ export class User extends AggregateRoot {
     return user;
   }
 
-  public deactivate(): void {
-    this.isActive = false;
-
-    this.addDomainEvent(new UserDeactivated(this.id));
-  }
-
   public static fromPersistent(
     id: string,
     firstName: string,
@@ -67,6 +61,12 @@ export class User extends AggregateRoot {
       Password.fromHashed(password),
       isActive,
     );
+  }
+
+  public deactivate(): void {
+    this.isActive = false;
+
+    this.addDomainEvent(new UserDeactivated(this.id));
   }
 
   public async changePassword(
