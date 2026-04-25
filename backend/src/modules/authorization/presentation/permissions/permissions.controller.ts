@@ -18,6 +18,8 @@ import ExceptionHandler from '../../../../shared/domain/exception/exception.hand
 
 @Controller('permissions')
 export class PermissionsController {
+  static performedBy = '123123123312';
+
   public constructor(
     private readonly findPermissionsUseCase: FindPermissionsUseCase,
     private readonly findOnePermissionUseCase: FindOnePermissionUseCase,
@@ -44,7 +46,10 @@ export class PermissionsController {
   @Post()
   public async create(@Body() request: CreatePermissionRequest) {
     try {
-      await this.createPermissionUseCase.execute(request);
+      await this.createPermissionUseCase.execute(
+        request,
+        PermissionsController.performedBy,
+      );
     } catch (error) {
       ExceptionHandler.handle(error);
     }

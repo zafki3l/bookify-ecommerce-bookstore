@@ -1,14 +1,18 @@
+import { AggregateRoot } from '../../../../shared/domain/aggregate-root';
 import { Action } from './enums/action.enum';
 import { Resource } from './enums/resource.enum';
+import { PermissionCreated } from './events/permission-created.event';
 import { ActionInvalidException } from './exceptions/action-invalid.exception';
 import { ResourceInvalidException } from './exceptions/resource-invalid.exception';
 
-export class Permission {
+export class Permission extends AggregateRoot {
   private constructor(
     private readonly id: string,
     private readonly resource: Resource,
     private readonly action: Action,
-  ) {}
+  ) {
+    super();
+  }
 
   public static create(resource: Resource, action: Action): Permission {
     const isIncludesInResource = Object.values(Resource).includes(resource);
@@ -23,7 +27,11 @@ export class Permission {
 
     const id = `${resource}.${action}`;
 
-    return new Permission(id.toLowerCase(), resource, action);
+    const permission = new Permission(id.toLowerCase(), resource, action);
+
+    permission.addDomainEvent(new PermissionCreated(id));
+
+    return permission;
   }
 
   public static fromPersistent(

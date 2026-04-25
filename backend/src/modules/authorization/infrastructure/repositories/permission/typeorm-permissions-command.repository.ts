@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { Permission } from '../../../domain/permission-aggregate/permission.aggregate';
 import { PermissionNotFoundException } from '../../../domain/permission-aggregate/exceptions/permission-not-found.exception';
 import { PermissionsMapper } from '../../mappers/permissions.mapper';
+import { PermissionCreated } from '../../../domain/permission-aggregate/events/permission-created.event';
+import { PermissionCreatedHandler } from '../../event-handlers/permissions/permission-created.handler';
 
 @Injectable()
 export class TypeOrmPermissionsCommandRepository implements IPermissionsCommandRepository {
@@ -24,8 +26,22 @@ export class TypeOrmPermissionsCommandRepository implements IPermissionsCommandR
     return PermissionsMapper.toDomain(permissionTypeOrm);
   }
 
-  public async save(permission: Permission): Promise<void> {
-    await this.repository.save(PermissionsMapper.toTypeOrm(permission));
+  public async save(
+    permission: Permission,
+    performedBy: string,
+  ): Promise<void> {
+    await this.repository.manager.transaction(async (manager) => {
+      for (const event of permission.getDomainEvents()) {
+        if (event instanceof PermissionCreated) {
+          await PermissionCreatedHandler.handle(
+            permission,
+            event,
+            manager,
+            performedBy,
+          );
+        }
+      }
+    });
   }
 
   public async delete(permission: Permission): Promise<void> {
