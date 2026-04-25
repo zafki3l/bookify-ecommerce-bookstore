@@ -1,7 +1,7 @@
-import { UserReadModel } from '../read-models/user-read.model';
+import { UserReadModel } from '../read-models/user.read-model';
 
 export interface IUsersQueryRepository {
-  find(): Promise<UserReadModel[]>;
+  findAll(): Promise<UserReadModel[]>;
 
   findOne(id: string): Promise<UserReadModel | null>;
 }
