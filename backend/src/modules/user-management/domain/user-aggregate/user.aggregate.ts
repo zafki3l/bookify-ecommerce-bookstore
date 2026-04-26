@@ -5,8 +5,13 @@ import { Gender } from './enums/gender.enum';
 import { PasswordChanged } from './events/password-changed';
 import { UserCreated } from './events/user-created.event';
 import { UserDeactivated } from './events/user-deactivated.event';
+import { FirstNameEmptyException } from './exceptions/first-name-empty.exception';
+import { GenderEmptyException } from './exceptions/gender-empty.exception';
+import { GenderInvalidOptionException } from './exceptions/gender-invalid-option.exception';
+import { LastNameEmptyException } from './exceptions/last-name-empty.exception';
 import { PasswordNotMatchingException } from './exceptions/password-not-matching.exception';
 import { PasswordVerifyFailed } from './exceptions/password-verify-failed.exception';
+import { UserIdEmptyException } from './exceptions/user-id-empty.exception';
 
 export class User extends AggregateRoot {
   private constructor(
@@ -38,15 +43,30 @@ export class User extends AggregateRoot {
       await Password.create(password),
     );
 
+    if (!id) {
+      throw new UserIdEmptyException();
+    }
+
+    if (!firstName) {
+      throw new FirstNameEmptyException();
+    }
+
+    if (!lastName) {
+      throw new LastNameEmptyException();
+    }
+
+    if (!gender) {
+      throw new GenderEmptyException();
+    }
+
+    const isIncludesInGender = Object.values(Gender).includes(gender);
+    if (!isIncludesInGender) {
+      throw new GenderInvalidOptionException(gender);
+    }
+
     user.addDomainEvent(new UserCreated(id));
 
     return user;
-  }
-
-  public deactivate(): void {
-    this.isActive = false;
-
-    this.addDomainEvent(new UserDeactivated(this.id));
   }
 
   public static fromPersistent(
@@ -67,6 +87,12 @@ export class User extends AggregateRoot {
       Password.fromHashed(password),
       isActive,
     );
+  }
+
+  public deactivate(): void {
+    this.isActive = false;
+
+    this.addDomainEvent(new UserDeactivated(this.id));
   }
 
   public async changePassword(
