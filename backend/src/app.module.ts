@@ -29,6 +29,7 @@ import KeyvRedis from '@keyv/redis';
         database: config.get('MYSQL_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
+        logging: true,
       }),
     }),
 

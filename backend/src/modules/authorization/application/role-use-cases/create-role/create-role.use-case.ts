@@ -56,8 +56,8 @@ export class CreateRoleUseCase {
         'roles',
         { id: role.getId() },
       );
-    });
 
-    role.clearDomainEvents();
+      role.clearDomainEvents();
+    });
   }
 }
