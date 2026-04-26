@@ -18,7 +18,7 @@ import { RevokePermissionUseCase } from './application/role-use-cases/revoke-per
 import { DeleteRoleUseCase } from './application/role-use-cases/delete-role/delete-role.use-case';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module';
-import { RolePermisionModule } from './role-permission.module';
+import { RolePermissionModule } from './role-permission.module';
 import { PermissionsModule } from './permissions.module';
 
 @Module({
@@ -27,7 +27,7 @@ import { PermissionsModule } from './permissions.module';
     AuditLogModule,
     PermissionsModule,
     UnitOfWorkModule,
-    RolePermisionModule,
+    RolePermissionModule,
   ],
   controllers: [RolesController],
   providers: [
