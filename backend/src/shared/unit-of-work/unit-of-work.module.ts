@@ -4,11 +4,12 @@ import { TypeOrmUnitOfWork } from './infrastructure/typeorm-unit-of-work';
 
 @Module({
   providers: [
+    TypeOrmUnitOfWork,
     {
       provide: UNIT_OF_WORK,
-      useClass: TypeOrmUnitOfWork,
+      useExisting: TypeOrmUnitOfWork,
     },
   ],
-  exports: [UNIT_OF_WORK],
+  exports: [UNIT_OF_WORK, TypeOrmUnitOfWork],
 })
 export class UnitOfWorkModule {}
