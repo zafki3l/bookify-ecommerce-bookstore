@@ -22,6 +22,7 @@ export class User extends AggregateRoot {
     private gender: Gender,
     private password: Password,
     private isActive: boolean = true,
+    private roleId: string = 'staff', // When admin create an account, the default is staff; when customer register an account, it will be user
   ) {
     super();
   }
@@ -33,16 +34,8 @@ export class User extends AggregateRoot {
     email: string,
     gender: Gender,
     password: string,
+    roleId: string,
   ): Promise<User> {
-    const user = new User(
-      id,
-      firstName,
-      lastName,
-      Email.create(email),
-      gender,
-      await Password.create(password),
-    );
-
     if (!id) {
       throw new UserIdEmptyException();
     }
@@ -64,6 +57,17 @@ export class User extends AggregateRoot {
       throw new GenderInvalidOptionException(gender);
     }
 
+    const user = new User(
+      id,
+      firstName,
+      lastName,
+      Email.create(email),
+      gender,
+      await Password.create(password),
+      true,
+      roleId,
+    );
+
     user.addDomainEvent(new UserCreated(id));
 
     return user;
@@ -77,6 +81,7 @@ export class User extends AggregateRoot {
     gender: string,
     password: string,
     isActive: boolean,
+    roleId: string,
   ): User {
     return new User(
       id,
@@ -86,6 +91,7 @@ export class User extends AggregateRoot {
       gender as Gender,
       Password.fromHashed(password),
       isActive,
+      roleId,
     );
   }
 
@@ -143,5 +149,9 @@ export class User extends AggregateRoot {
 
   public getGender(): Gender {
     return this.gender;
+  }
+
+  public getRoleId(): string {
+    return this.roleId;
   }
 }

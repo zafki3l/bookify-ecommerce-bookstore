@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -36,4 +37,7 @@ export class UserTypeOrm {
   @ManyToOne(() => RoleTypeOrm)
   @JoinColumn({ name: 'roleId' })
   role!: RoleTypeOrm;
+
+  @CreateDateColumn()
+  createdAt!: Date;
 }

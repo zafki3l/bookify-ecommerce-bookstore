@@ -1,0 +1,32 @@
+import { User } from '../../../domain/user-aggregate/user.aggregate';
+import { UserTypeOrm } from '../../entities/user.entity';
+
+export class UsersMapper {
+  public static toDomain(userTypeOrm: UserTypeOrm): User {
+    return User.fromPersistent(
+      userTypeOrm.id,
+      userTypeOrm.firstName,
+      userTypeOrm.lastName,
+      userTypeOrm.email,
+      userTypeOrm.gender,
+      userTypeOrm.password,
+      userTypeOrm.isActive,
+      userTypeOrm.roleId,
+    );
+  }
+
+  public static toTypeOrm(user: User): UserTypeOrm {
+    const userTypeOrm = new UserTypeOrm();
+
+    userTypeOrm.id = user.getId();
+    userTypeOrm.firstName = user.getFirstName();
+    userTypeOrm.lastName = user.getLastName();
+    userTypeOrm.email = user.getEmail();
+    userTypeOrm.gender = user.getGender();
+    userTypeOrm.password = user.getPassword();
+    userTypeOrm.isActive = user.getIsActive();
+    userTypeOrm.roleId = user.getRoleId();
+
+    return userTypeOrm;
+  }
+}
