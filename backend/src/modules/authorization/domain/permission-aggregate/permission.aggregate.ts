@@ -30,8 +30,6 @@ export class Permission extends AggregateRoot {
 
     const permission = new Permission(id.toLowerCase(), resource, action);
 
-    permission.addDomainEvent(new PermissionCreated(id));
-
     return permission;
   }
 

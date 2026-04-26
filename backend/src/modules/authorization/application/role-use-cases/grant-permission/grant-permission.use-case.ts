@@ -9,6 +9,18 @@ import {
   PERMISSION_EXISTS_CHECKER,
 } from '../../../domain/permission-aggregate/services/permission-exists-checker.service.interface';
 import { PermissionNotFoundException } from '../../../domain/permission-aggregate/exceptions/permission-not-found.exception';
+import {
+  type IUnitOfWork,
+  UNIT_OF_WORK,
+} from '../../../../../shared/unit-of-work/application/unit-of-work';
+import {
+  AUDIT_LOG_COMMAND_REPOSITORY,
+  type IAuditLogCommandRepository,
+} from '../../../../audit-log/domain/audit-log-aggregate/repositories/audit-log-command.repository.interface';
+import {
+  type IRolePermissionCommandRepository,
+  ROLE_PERMISSION_COMMAND_REPOSITORY,
+} from '../../../domain/role-aggregate/repositories/role-permission-command.repository.interface';
 
 @Injectable()
 export class GrantPermissionUseCase {
@@ -18,6 +30,15 @@ export class GrantPermissionUseCase {
 
     @Inject(PERMISSION_EXISTS_CHECKER)
     private readonly permissionExistsChecker: IPermissionExistsChecker,
+
+    @Inject(UNIT_OF_WORK)
+    private readonly unitOfWork: IUnitOfWork,
+
+    @Inject(AUDIT_LOG_COMMAND_REPOSITORY)
+    private readonly auditLogRepository: IAuditLogCommandRepository,
+
+    @Inject(ROLE_PERMISSION_COMMAND_REPOSITORY)
+    private readonly rolePermissionRepository: IRolePermissionCommandRepository,
   ) {}
 
   public async execute(
@@ -32,13 +53,25 @@ export class GrantPermissionUseCase {
       throw new PermissionNotFoundException(request.permissionId);
     }
 
-    const role = await this.repository.findOne(id);
-    if (!role) {
-      return;
-    }
+    await this.unitOfWork.execute(async () => {
+      const role = await this.repository.findOne(id);
 
-    role.grantPermission(request.permissionId);
+      role.grantPermission(request.permissionId);
 
-    await this.repository.save(role, performedBy);
+      await this.rolePermissionRepository.grantPermission(
+        id,
+        request.permissionId,
+      );
+
+      await this.auditLogRepository.write(
+        'GRANT_PERMISSION',
+        performedBy,
+        'authorization',
+        'role_permission',
+        { roleId: id, permissionId: request.permissionId },
+      );
+
+      role.clearDomainEvents();
+    });
   }
 }

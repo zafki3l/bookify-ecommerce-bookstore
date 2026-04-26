@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoleTypeOrm } from './infrastructure/entities/role.entity';
-import { SharedCacheModule } from '../../shared/cache/cache.module';
 import { ROLES_QUERY_REPOSITORY } from './domain/role-aggregate/repositories/roles-query.repository.interface';
 import { TypeOrmRolesQueryRepository } from './infrastructure/repositories/roles/typeorm-roles-query.repository';
 import { FindRolesUseCase } from './application/role-use-cases/find-roles/find-roles.use-case';
@@ -15,17 +14,20 @@ import { RenameRoleUseCase } from './application/role-use-cases/rename-role/rena
 import { RolesController } from './presentation/roles/roles.controller';
 import { GrantPermissionUseCase } from './application/role-use-cases/grant-permission/grant-permission.use-case';
 import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission.entity';
-import { PermissionsModule } from './permissions.module';
 import { RevokePermissionUseCase } from './application/role-use-cases/revoke-permission/revoke-permission.use-case';
 import { DeleteRoleUseCase } from './application/role-use-cases/delete-role/delete-role.use-case';
 import { AuditLogModule } from '../audit-log/audit-log.module';
+import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module';
+import { RolePermisionModule } from './role-permission.module';
+import { PermissionsModule } from './permissions.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([RoleTypeOrm, RolePermissionTypeOrm]),
-    SharedCacheModule,
-    PermissionsModule,
     AuditLogModule,
+    PermissionsModule,
+    UnitOfWorkModule,
+    RolePermisionModule,
   ],
   controllers: [RolesController],
   providers: [
