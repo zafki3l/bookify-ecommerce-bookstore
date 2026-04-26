@@ -7,9 +7,16 @@ import { USERS_QUERY_REPOSITORY } from './domain/user-aggregate/repositories/use
 import { TypeOrmUsersQueryRepository } from './infrastructure/repositories/users/typeorm-users-query.repository';
 import { FindUsersUseCase } from './application/user-use-cases/find-users/find-users.use-case';
 import { FindOneUserUseCase } from './application/user-use-cases/find-one-users/find-one-user.use-case';
+import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module';
+import { AuditLogModule } from '../audit-log/audit-log.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserTypeOrm]), SharedCacheModule],
+  imports: [
+    TypeOrmModule.forFeature([UserTypeOrm]),
+    SharedCacheModule,
+    UnitOfWorkModule,
+    AuditLogModule,
+  ],
   providers: [
     FindUsersUseCase,
     FindOneUserUseCase,
