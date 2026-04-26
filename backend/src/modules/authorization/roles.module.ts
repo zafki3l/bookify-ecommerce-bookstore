@@ -20,6 +20,7 @@ import { AuditLogModule } from '../audit-log/audit-log.module';
 import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module';
 import { RolePermissionModule } from './role-permission.module';
 import { PermissionsModule } from './permissions.module';
+import { AuthenticationModule } from '../authentication/authentication.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PermissionsModule } from './permissions.module';
     PermissionsModule,
     UnitOfWorkModule,
     RolePermissionModule,
+    AuthenticationModule,
   ],
   controllers: [RolesController],
   providers: [

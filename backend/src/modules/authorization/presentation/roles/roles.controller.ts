@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { FindRolesUseCase } from '../../application/role-use-cases/find-roles/find-roles.use-case';
 import { FindOneRoleUseCase } from '../../application/role-use-cases/find-one-role/find-one-role.use-case';
@@ -22,11 +23,12 @@ import { GrantPermissionUseCase } from '../../application/role-use-cases/grant-p
 import ExceptionHandler from '../../../../shared/domain/exception/exception.handler';
 import { RevokePermissionUseCase } from '../../application/role-use-cases/revoke-permission/revoke-permission.use-case';
 import { DeleteRoleUseCase } from '../../application/role-use-cases/delete-role/delete-role.use-case';
+import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
+import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
 
 @Controller('roles')
+@UseGuards(JwtAuthGuard)
 export class RolesController {
-  static performedBy = '123123123312';
-
   public constructor(
     private readonly findRolesUseCase: FindRolesUseCase,
     private readonly findOneRoleUseCase: FindOneRoleUseCase,
@@ -54,12 +56,12 @@ export class RolesController {
   }
 
   @Post()
-  public async create(@Body() request: CreateRoleRequest): Promise<void> {
+  public async create(
+    @Body() request: CreateRoleRequest,
+    @CurrentUser('id') userId: string,
+  ): Promise<void> {
     try {
-      await this.createRoleUseCase.execute(
-        request,
-        RolesController.performedBy,
-      );
+      await this.createRoleUseCase.execute(request, userId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -69,13 +71,10 @@ export class RolesController {
   public async rename(
     @Param('id') id: string,
     @Body() request: RenameRoleRequest,
+    @CurrentUser('id') userId: string,
   ): Promise<void> {
     try {
-      await this.renameRoleUseCase.execute(
-        id,
-        request,
-        RolesController.performedBy,
-      );
+      await this.renameRoleUseCase.execute(id, request, userId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -85,13 +84,10 @@ export class RolesController {
   public async grantPermission(
     @Param('id') id: string,
     @Body() request: GrantPermissionRequest,
+    @CurrentUser('id') userId: string,
   ): Promise<void> {
     try {
-      await this.grantPermissionUseCase.execute(
-        id,
-        request,
-        RolesController.performedBy,
-      );
+      await this.grantPermissionUseCase.execute(id, request, userId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -102,13 +98,10 @@ export class RolesController {
   public async revokePermission(
     @Param('id') id: string,
     @Param('permissionId') permissionId: string,
+    @CurrentUser('id') userId: string,
   ): Promise<void> {
     try {
-      await this.revokePermissionUseCase.execute(
-        id,
-        permissionId,
-        RolesController.performedBy,
-      );
+      await this.revokePermissionUseCase.execute(id, permissionId, userId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -116,9 +109,12 @@ export class RolesController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async remove(@Param('id') id: string): Promise<void> {
+  public async remove(
+    @Param('id') id: string,
+    @CurrentUser('id') userId: string,
+  ): Promise<void> {
     try {
-      await this.deleteRoleUseCase.execute(id, RolesController.performedBy);
+      await this.deleteRoleUseCase.execute(id, userId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }

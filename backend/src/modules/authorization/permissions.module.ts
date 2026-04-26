@@ -17,6 +17,7 @@ import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module'
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission.entity';
 import { RolePermissionModule } from './role-permission.module';
+import { AuthenticationModule } from '../authentication/authentication.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { RolePermissionModule } from './role-permission.module';
     UnitOfWorkModule,
     AuditLogModule,
     RolePermissionModule,
+    AuthenticationModule,
   ],
   controllers: [PermissionsController],
   providers: [
