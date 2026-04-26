@@ -36,22 +36,8 @@ export class DeleteRoleUseCase {
     await this.unitOfWork.execute(async () => {
       const role = await this.repository.findOne(id);
 
-      for (const permission of role.getPermissions()) {
-        await this.rolePermissionRepository.revokePermission(id, permission);
-
-        await this.auditLogRepository.write(
-          'DELETE_ROLE_PERMISSION',
-          performedBy,
-          'authorization',
-          'role_permissions',
-          {
-            roleId: id,
-            permissionId: permission,
-          },
-        );
-      }
-
-      role.delete();
+      const permissions =
+        await this.rolePermissionRepository.revokePermissionByRoleId(id);
 
       await this.repository.delete(role);
 
@@ -60,7 +46,7 @@ export class DeleteRoleUseCase {
         performedBy,
         'authorization',
         'roles',
-        { id: id },
+        { id: id, permissionsRevoked: permissions },
       );
     });
   }

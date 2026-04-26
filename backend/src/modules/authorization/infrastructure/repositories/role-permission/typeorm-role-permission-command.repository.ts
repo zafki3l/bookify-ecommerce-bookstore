@@ -24,4 +24,16 @@ export class TypeOrmRolePermissionCommandRepository implements IRolePermissionCo
       .getManager()
       .delete(RolePermissionTypeOrm, { roleId, permissionId });
   }
+
+  public async revokePermissionByRoleId(roleId: string): Promise<string[]> {
+    const rows = await this.unitOfWork
+      .getManager()
+      .find(RolePermissionTypeOrm, { where: { roleId } });
+
+    await this.unitOfWork
+      .getManager()
+      .delete(RolePermissionTypeOrm, { roleId });
+
+    return rows.map((r) => r.permissionId);
+  }
 }
