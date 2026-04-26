@@ -16,7 +16,7 @@ import { DeletePermissionUseCase } from './application/permission-use-cases/dele
 import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission.entity';
-import { RolePermisionModule } from './role-permission.module';
+import { RolePermissionModule } from './role-permission.module';
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { RolePermisionModule } from './role-permission.module';
     SharedCacheModule,
     UnitOfWorkModule,
     AuditLogModule,
-    RolePermisionModule,
+    RolePermissionModule,
   ],
   controllers: [PermissionsController],
   providers: [

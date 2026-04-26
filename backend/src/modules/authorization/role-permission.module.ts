@@ -13,4 +13,4 @@ import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module'
   ],
   exports: [ROLE_PERMISSION_COMMAND_REPOSITORY],
 })
-export class RolePermisionModule {}
+export class RolePermissionModule {}
