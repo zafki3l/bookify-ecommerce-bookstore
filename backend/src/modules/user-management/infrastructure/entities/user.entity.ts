@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { RoleTypeOrm } from '../../../authorization/infrastructure/entities/role.entity';
 
 @Entity('users')
 export class UserTypeOrm {
@@ -22,4 +29,11 @@ export class UserTypeOrm {
 
   @Column({ type: 'boolean', default: true })
   isActive!: boolean;
+
+  @Column({ type: 'varchar', length: 50 })
+  roleId!: string;
+
+  @ManyToOne(() => RoleTypeOrm)
+  @JoinColumn({ name: 'roleId' })
+  role!: RoleTypeOrm;
 }
