@@ -17,6 +17,10 @@ import {
   AUDIT_LOG_COMMAND_REPOSITORY,
   type IAuditLogCommandRepository,
 } from '../../../../audit-log/domain/audit-log-aggregate/repositories/audit-log-command.repository.interface';
+import {
+  type IRolesCommandRepository,
+  ROLES_COMMAND_REPOSITORY,
+} from '../../../../authorization/domain/role-aggregate/repositories/roles-command.repository.interface';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -32,12 +36,16 @@ export class CreateUserUseCase {
 
     @Inject(AUDIT_LOG_COMMAND_REPOSITORY)
     private readonly auditLogRepository: IAuditLogCommandRepository,
+
+    @Inject(ROLES_COMMAND_REPOSITORY)
+    private readonly roleRepository: IRolesCommandRepository,
   ) {}
 
   public async execute(
     request: ICreateUserRequest,
     performedBy: string,
   ): Promise<void> {
+    const role = await this.roleRepository.findOne(request.roleId);
     const id = this.uuid.generate();
 
     const user = await User.create(
@@ -47,7 +55,7 @@ export class CreateUserUseCase {
       request.email,
       request.gender,
       request.password,
-      request.roleId,
+      role.getId(),
     );
 
     await this.unitOfWork.execute(async () => {

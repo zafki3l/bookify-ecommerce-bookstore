@@ -13,6 +13,7 @@ import { UuidModule } from '../../shared/uuid/uuid.module';
 import { CreateUserUseCase } from './application/user-use-cases/create-user/create-user.use-case';
 import { USERS_COMMAND_REPOSITORY } from './domain/user-aggregate/repositories/users-command.repository.interface';
 import { TypeOrmUsersCommandRepository } from './infrastructure/repositories/users/typeorm-users-command.repository';
+import { RolesModule } from '../authorization/roles.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TypeOrmUsersCommandRepository } from './infrastructure/repositories/use
     SharedCacheModule,
     UnitOfWorkModule,
     UuidModule,
+    RolesModule,
     AuditLogModule,
   ],
   providers: [
