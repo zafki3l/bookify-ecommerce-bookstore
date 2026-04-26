@@ -17,6 +17,6 @@ export class TypeOrmUnitOfWork implements IUnitOfWork {
   }
 
   public getManager(): EntityManager {
-    return this.manager;
+    return this.manager ?? this.dataSource.manager;
   }
 }
