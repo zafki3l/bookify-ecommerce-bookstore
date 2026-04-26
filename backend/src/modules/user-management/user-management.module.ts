@@ -9,23 +9,33 @@ import { FindUsersUseCase } from './application/user-use-cases/find-users/find-u
 import { FindOneUserUseCase } from './application/user-use-cases/find-one-users/find-one-user.use-case';
 import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module';
 import { AuditLogModule } from '../audit-log/audit-log.module';
+import { UuidModule } from '../../shared/uuid/uuid.module';
+import { CreateUserUseCase } from './application/user-use-cases/create-user/create-user.use-case';
+import { USERS_COMMAND_REPOSITORY } from './domain/user-aggregate/repositories/users-command.repository.interface';
+import { TypeOrmUsersCommandRepository } from './infrastructure/repositories/users/typeorm-users-command.repository';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserTypeOrm]),
     SharedCacheModule,
     UnitOfWorkModule,
+    UuidModule,
     AuditLogModule,
   ],
   providers: [
     FindUsersUseCase,
     FindOneUserUseCase,
+    CreateUserUseCase,
     {
       provide: USERS_QUERY_REPOSITORY,
       useClass: TypeOrmUsersQueryRepository,
     },
+    {
+      provide: USERS_COMMAND_REPOSITORY,
+      useClass: TypeOrmUsersCommandRepository,
+    },
   ],
-  exports: [USERS_QUERY_REPOSITORY],
+  exports: [USERS_QUERY_REPOSITORY, USERS_COMMAND_REPOSITORY],
   controllers: [UsersController],
 })
 export class UserManagementModule {}
