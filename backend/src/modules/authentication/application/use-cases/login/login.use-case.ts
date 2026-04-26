@@ -5,7 +5,6 @@ import {
 } from '../../../domain/repositories/authenticable-user-query.repository.interface';
 import { ILoginRequest } from './login.request';
 import { Password } from '../../../../../shared/domain/value-objects/password/password.value-object';
-import { JwtService } from '@nestjs/jwt';
 import {
   type IUuidGenerator,
   UUID_GENERATOR,
@@ -14,7 +13,14 @@ import {
   CACHE_REPOSITORY,
   type ICacheRepository,
 } from '../../../../../shared/cache/domain/cache.repository.interface';
-import * as crypto from 'crypto';
+import {
+  SIGN_TOKEN_SERVICE,
+  type ISignTokenService,
+} from '../../../domain/services/sign-token.service';
+import {
+  type IRefreshTokenHasherService,
+  REFRESH_TOKEN_HASHER,
+} from '../../../domain/services/refresh-token-hasher.service';
 
 @Injectable()
 export class LoginUseCase {
@@ -31,7 +37,11 @@ export class LoginUseCase {
     @Inject(CACHE_REPOSITORY)
     private readonly cache: ICacheRepository,
 
-    private readonly jwtService: JwtService,
+    @Inject(SIGN_TOKEN_SERVICE)
+    private readonly signTokenService: ISignTokenService,
+
+    @Inject(REFRESH_TOKEN_HASHER)
+    private readonly refreshTokenHasher: IRefreshTokenHasherService,
   ) {}
 
   public async execute(
@@ -53,17 +63,14 @@ export class LoginUseCase {
       return null;
     }
 
-    const accessToken = this.jwtService.sign({
-      sub: authUser.id,
-      roleId: authUser.roleId,
-    });
+    const accessToken = this.signTokenService.sign(
+      authUser.id,
+      authUser.roleId,
+    );
 
     const refreshToken = this.uuid.generate();
 
-    const hashedRefreshToken = crypto
-      .createHash('sha256')
-      .update(refreshToken)
-      .digest('hex');
+    const hashedRefreshToken = this.refreshTokenHasher.hash(refreshToken);
 
     await this.cache.set(
       `refresh_token:${authUser.id}`,

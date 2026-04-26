@@ -10,6 +10,10 @@ import { LoginUseCase } from './application/use-cases/login/login.use-case';
 import { UuidModule } from '../../shared/uuid/uuid.module';
 import { AuthController } from './presentation/auth.controller';
 import { SharedCacheModule } from '../../shared/cache/cache.module';
+import { SIGN_TOKEN_SERVICE } from './domain/services/sign-token.service';
+import { JwtSignTokenService } from './infrastructure/services/jwt-sign-token.service';
+import { REFRESH_TOKEN_HASHER } from './domain/services/refresh-token-hasher.service';
+import { CryptoRefreshTokenHasherService } from './infrastructure/services/crypto-refresh-token-hasher.service';
 
 @Module({
   imports: [
@@ -31,6 +35,14 @@ import { SharedCacheModule } from '../../shared/cache/cache.module';
     {
       provide: AUTHENTICABLE_USER_QUERY_REPOSITORY,
       useClass: TypeOrmAuthenticableUserQueryRepository,
+    },
+    {
+      provide: SIGN_TOKEN_SERVICE,
+      useClass: JwtSignTokenService,
+    },
+    {
+      provide: REFRESH_TOKEN_HASHER,
+      useClass: CryptoRefreshTokenHasherService,
     },
   ],
   exports: [AUTHENTICABLE_USER_QUERY_REPOSITORY],
