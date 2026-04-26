@@ -36,4 +36,18 @@ export class TypeOrmRolePermissionCommandRepository implements IRolePermissionCo
 
     return rows.map((r) => r.permissionId);
   }
+
+  public async revokePermissionByPermissionId(
+    permissionId: string,
+  ): Promise<string[]> {
+    const rows = await this.unitOfWork
+      .getManager()
+      .find(RolePermissionTypeOrm, { where: { permissionId } });
+
+    await this.unitOfWork
+      .getManager()
+      .delete(RolePermissionTypeOrm, { permissionId });
+
+    return rows.map((r) => r.roleId);
+  }
 }

@@ -14,20 +14,20 @@ import { RenameRoleUseCase } from './application/role-use-cases/rename-role/rena
 import { RolesController } from './presentation/roles/roles.controller';
 import { GrantPermissionUseCase } from './application/role-use-cases/grant-permission/grant-permission.use-case';
 import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission.entity';
-import { PermissionsModule } from './permissions.module';
 import { RevokePermissionUseCase } from './application/role-use-cases/revoke-permission/revoke-permission.use-case';
 import { DeleteRoleUseCase } from './application/role-use-cases/delete-role/delete-role.use-case';
 import { AuditLogModule } from '../audit-log/audit-log.module';
 import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module';
-import { ROLE_PERMISSION_COMMAND_REPOSITORY } from './domain/role-aggregate/repositories/role-permission-command.repository.interface';
-import { TypeOrmRolePermissionCommandRepository } from './infrastructure/repositories/role-permission/typeorm-role-permission-command.repository';
+import { RolePermisionModule } from './role-permission.module';
+import { PermissionsModule } from './permissions.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([RoleTypeOrm, RolePermissionTypeOrm]),
-    PermissionsModule,
     AuditLogModule,
+    PermissionsModule,
     UnitOfWorkModule,
+    RolePermisionModule,
   ],
   controllers: [RolesController],
   providers: [
@@ -50,16 +50,11 @@ import { TypeOrmRolePermissionCommandRepository } from './infrastructure/reposit
       provide: ROLE_EXISTS_CHECKER,
       useClass: RoleExistsChecker,
     },
-    {
-      provide: ROLE_PERMISSION_COMMAND_REPOSITORY,
-      useClass: TypeOrmRolePermissionCommandRepository,
-    },
   ],
   exports: [
     ROLES_QUERY_REPOSITORY,
     ROLES_COMMAND_REPOSITORY,
     ROLE_EXISTS_CHECKER,
-    ROLE_PERMISSION_COMMAND_REPOSITORY,
   ],
 })
 export class RolesModule {}

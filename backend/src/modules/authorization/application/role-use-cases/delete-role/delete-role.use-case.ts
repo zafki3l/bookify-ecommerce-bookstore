@@ -39,6 +39,8 @@ export class DeleteRoleUseCase {
       const permissions =
         await this.rolePermissionRepository.revokePermissionByRoleId(id);
 
+      role.delete();
+
       await this.repository.delete(role);
 
       await this.auditLogRepository.write(
@@ -48,6 +50,8 @@ export class DeleteRoleUseCase {
         'roles',
         { id: id, permissionsRevoked: permissions },
       );
+
+      role.clearDomainEvents();
     });
   }
 }

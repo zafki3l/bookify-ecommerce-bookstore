@@ -13,9 +13,19 @@ import { CreatePermissionUseCase } from './application/permission-use-cases/crea
 import { PERMISSION_EXISTS_CHECKER } from './domain/permission-aggregate/services/permission-exists-checker.service.interface';
 import { PermissionExistsChecker } from './infrastructure/services/permissions/permission-exists-checker.service';
 import { DeletePermissionUseCase } from './application/permission-use-cases/delete-permission/delete-permission.use-case';
+import { UnitOfWorkModule } from '../../shared/unit-of-work/unit-of-work.module';
+import { AuditLogModule } from '../audit-log/audit-log.module';
+import { RolePermissionTypeOrm } from './infrastructure/entities/role-permission.entity';
+import { RolePermisionModule } from './role-permission.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PermissionTypeOrm]), SharedCacheModule],
+  imports: [
+    TypeOrmModule.forFeature([PermissionTypeOrm, RolePermissionTypeOrm]),
+    SharedCacheModule,
+    UnitOfWorkModule,
+    AuditLogModule,
+    RolePermisionModule,
+  ],
   controllers: [PermissionsController],
   providers: [
     FindPermissionsUseCase,
