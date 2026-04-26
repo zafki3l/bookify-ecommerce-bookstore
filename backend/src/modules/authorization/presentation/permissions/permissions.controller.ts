@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { FindPermissionsUseCase } from '../../application/permission-use-cases/find-permissions/find-permissions.use-case';
 import { FindPermissionsResponse } from '../../application/permission-use-cases/find-permissions/find-permissions.response';
@@ -15,11 +16,12 @@ import { CreatePermissionRequest } from './requests/create-permission.request';
 import { CreatePermissionUseCase } from '../../application/permission-use-cases/create-permission/create-permission.use-case';
 import { DeletePermissionUseCase } from '../../application/permission-use-cases/delete-permission/delete-permission.use-case';
 import ExceptionHandler from '../../../../shared/domain/exception/exception.handler';
+import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
+import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
 
 @Controller('permissions')
+@UseGuards(JwtAuthGuard)
 export class PermissionsController {
-  static performedBy = '123123123312';
-
   public constructor(
     private readonly findPermissionsUseCase: FindPermissionsUseCase,
     private readonly findOnePermissionUseCase: FindOnePermissionUseCase,
@@ -44,12 +46,12 @@ export class PermissionsController {
   }
 
   @Post()
-  public async create(@Body() request: CreatePermissionRequest) {
+  public async create(
+    @Body() request: CreatePermissionRequest,
+    @CurrentUser('id') userId: string,
+  ) {
     try {
-      await this.createPermissionUseCase.execute(
-        request,
-        PermissionsController.performedBy,
-      );
+      await this.createPermissionUseCase.execute(request, userId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -57,12 +59,12 @@ export class PermissionsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async remove(@Param('id') id: string): Promise<void> {
+  public async remove(
+    @Param('id') id: string,
+    @CurrentUser('id') userId: string,
+  ): Promise<void> {
     try {
-      await this.deletePermissionUseCase.execute(
-        id,
-        PermissionsController.performedBy,
-      );
+      await this.deletePermissionUseCase.execute(id, userId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }

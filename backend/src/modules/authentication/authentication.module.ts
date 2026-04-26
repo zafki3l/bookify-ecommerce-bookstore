@@ -14,6 +14,8 @@ import { SIGN_TOKEN_SERVICE } from './domain/services/sign-token.service';
 import { JwtSignTokenService } from './infrastructure/services/jwt-sign-token.service';
 import { REFRESH_TOKEN_HASHER } from './domain/services/refresh-token-hasher.service';
 import { CryptoRefreshTokenHasherService } from './infrastructure/services/crypto-refresh-token-hasher.service';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from '../../shared/strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -29,8 +31,14 @@ import { CryptoRefreshTokenHasherService } from './infrastructure/services/crypt
     }),
     UuidModule,
     SharedCacheModule,
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET!,
+      signOptions: { expiresIn: '1d' },
+    }),
   ],
   providers: [
+    JwtStrategy,
     LoginUseCase,
     {
       provide: AUTHENTICABLE_USER_QUERY_REPOSITORY,
@@ -45,7 +53,7 @@ import { CryptoRefreshTokenHasherService } from './infrastructure/services/crypt
       useClass: CryptoRefreshTokenHasherService,
     },
   ],
-  exports: [AUTHENTICABLE_USER_QUERY_REPOSITORY],
+  exports: [AUTHENTICABLE_USER_QUERY_REPOSITORY, JwtModule],
   controllers: [AuthController],
 })
 export class AuthenticationModule {}
