@@ -25,9 +25,12 @@ import { RevokePermissionUseCase } from '../../application/role-use-cases/revoke
 import { DeleteRoleUseCase } from '../../application/role-use-cases/delete-role/delete-role.use-case';
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
 import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
+import { Roles } from '../../../../shared/decorators/roles.decorator';
+import { RoleGuard } from '../../../../shared/guards/role.guard';
 
 @Controller('roles')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RoleGuard)
+@Roles('admin')
 export class RolesController {
   public constructor(
     private readonly findRolesUseCase: FindRolesUseCase,
