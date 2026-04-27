@@ -1,13 +1,18 @@
 'use client';
 
+import { loginApi } from '@/app/(authentication)/api/auth.api';
+import { saveTokens } from '@/app/(authentication)/lib/token-storage';
 import useForm from '@/hooks/useForm';
-import { Mail, EyeOff, Eye, Lock } from 'lucide-react';
+import { Mail, EyeOff, Eye, Lock, LoaderCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 type LoginFormProps = {};
 
 export default function LoginForm({}: LoginFormProps) {
+  const router = useRouter();
+
   const { form, setForm } = useForm({
     email: '',
     password: '',
@@ -15,13 +20,39 @@ export default function LoginForm({}: LoginFormProps) {
   });
 
   const [showPass, setShowPass] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!form.email || !form.password) {
+      setErrorMessage('Email and password are required.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setErrorMessage(null);
+
+      const { accessToken, refreshToken } = await loginApi({
+        email: form.email,
+        password: form.password,
+      });
+
+      saveTokens(accessToken, refreshToken, form.remember);
+      router.push('/');
+      router.refresh();
+    } catch (error) {
+      const fallbackMessage = 'Đăng nhập thất bại, vui lòng thử lại.';
+      setErrorMessage(error instanceof Error ? error.message : fallbackMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-    >
+    <form onSubmit={handleSubmit}>
       {/* Email */}
       <label className="text-[10px] font-bold tracking-[0.07em] uppercase text-[#58615b] mb-1.5 block">
         Email
@@ -84,11 +115,22 @@ export default function LoginForm({}: LoginFormProps) {
         </Link>
       </div>
 
+      {errorMessage ? (
+        <p className="mb-3 text-xs text-red-600">{errorMessage}</p>
+      ) : null}
       <button
         type="submit"
-        className="w-full h-11 rounded-full bg-[#2d6a4f] text-white text-[14px] font-bold hover:bg-[#245a41] transition-colors"
+        disabled={isSubmitting}
+        className="w-full h-11 rounded-full bg-[#2d6a4f] text-white text-[14px] font-bold hover:bg-[#245a41] transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
       >
-        Login
+        {isSubmitting ? (
+          <span className="inline-flex items-center gap-2">
+            <LoaderCircle size={16} className="animate-spin" />
+            Logging in...
+          </span>
+        ) : (
+          'Login'
+        )}
       </button>
     </form>
   );
