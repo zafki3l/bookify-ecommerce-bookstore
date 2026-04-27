@@ -51,10 +51,10 @@ export class PermissionsController {
   @Post()
   public async create(
     @Body() request: CreatePermissionRequest,
-    @CurrentUser('id') userId: string,
+    @CurrentUser('id') actorId: string,
   ) {
     try {
-      await this.createPermissionUseCase.execute(request, userId);
+      await this.createPermissionUseCase.execute(request, actorId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
@@ -64,10 +64,10 @@ export class PermissionsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async remove(
     @Param('id') id: string,
-    @CurrentUser('id') userId: string,
+    @CurrentUser('id') actorId: string,
   ): Promise<void> {
     try {
-      await this.deletePermissionUseCase.execute(id, userId);
+      await this.deletePermissionUseCase.execute(id, actorId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
