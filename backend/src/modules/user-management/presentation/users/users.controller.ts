@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { FindUsersUseCase } from '../../application/user-use-cases/find-users/find-users.use-case';
 import { FindOneUserUseCase } from '../../application/user-use-cases/find-one-users/find-one-user.use-case';
 import { FindUsersResponse } from '../../application/user-use-cases/find-users/find-users.response';
@@ -6,11 +6,15 @@ import { FindOneUserResponse } from '../../application/user-use-cases/find-one-u
 import { CreateUserRequest } from './requests/create-user.request';
 import ExceptionHandler from '../../../../shared/domain/exception/exception.handler';
 import { CreateUserUseCase } from '../../application/user-use-cases/create-user/create-user.use-case';
+import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
+import { RoleGuard } from '../../../../shared/guards/role.guard';
+import { Roles } from '../../../../shared/decorators/roles.decorator';
+import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard, RoleGuard)
+@Roles('admin')
 export class UsersController {
-  private static performedBy = '23213213123123123';
-
   public constructor(
     private readonly findUsersUseCase: FindUsersUseCase,
     private readonly findOneUserUseCase: FindOneUserUseCase,
@@ -34,12 +38,12 @@ export class UsersController {
   }
 
   @Post()
-  public async create(@Body() request: CreateUserRequest): Promise<void> {
+  public async create(
+    @Body() request: CreateUserRequest,
+    @CurrentUser() actorId: string,
+  ): Promise<void> {
     try {
-      await this.createUserUseCase.execute(
-        request,
-        UsersController.performedBy,
-      );
+      await this.createUserUseCase.execute(request, actorId);
     } catch (error) {
       ExceptionHandler.handle(error);
     }
