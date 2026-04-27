@@ -14,6 +14,7 @@ import { CreateUserUseCase } from './application/user-use-cases/create-user/crea
 import { USERS_COMMAND_REPOSITORY } from './domain/user-aggregate/repositories/users-command.repository.interface';
 import { TypeOrmUsersCommandRepository } from './infrastructure/repositories/users/typeorm-users-command.repository';
 import { RolesModule } from '../authorization/roles.module';
+import { AuthenticationModule } from '../authentication/authentication.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { RolesModule } from '../authorization/roles.module';
     UuidModule,
     RolesModule,
     AuditLogModule,
+    AuthenticationModule,
   ],
   providers: [
     FindUsersUseCase,
