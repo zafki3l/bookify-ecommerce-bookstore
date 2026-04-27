@@ -18,9 +18,12 @@ import { DeletePermissionUseCase } from '../../application/permission-use-cases/
 import ExceptionHandler from '../../../../shared/domain/exception/exception.handler';
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
 import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
+import { RoleGuard } from '../../../../shared/guards/role.guard';
+import { Roles } from '../../../../shared/decorators/roles.decorator';
 
 @Controller('permissions')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RoleGuard)
+@Roles('admin')
 export class PermissionsController {
   public constructor(
     private readonly findPermissionsUseCase: FindPermissionsUseCase,
