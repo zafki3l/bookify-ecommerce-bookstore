@@ -1,13 +1,15 @@
 'use client';
 
 import { useDropdown } from '@/app/(shop)/hooks/useDropdown';
-import { ShoppingCart, Globe, User } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { ShoppingCart, User } from 'lucide-react';
 import Link from 'next/link';
 
 type NavUserMenuProps = {};
 
 export default function NavUserMenu({}: NavUserMenuProps) {
   const dropdown = useDropdown();
+  const { isAuth, roleId } = useAuth();
 
   return (
     <div className="flex items-center gap-3.5 shrink-0">
@@ -24,7 +26,7 @@ export default function NavUserMenu({}: NavUserMenuProps) {
         </button>
         {dropdown.isOpen && (
           <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-            {false ? (
+            {isAuth ? (
               <>
                 <Link
                   href="/account"
@@ -33,7 +35,7 @@ export default function NavUserMenu({}: NavUserMenuProps) {
                 >
                   My Account
                 </Link>
-                {true && (
+                {roleId === 'admin' && (
                   <Link
                     href="/users"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
