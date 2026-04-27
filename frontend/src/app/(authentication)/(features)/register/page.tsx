@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, User, MapPin } from 'lucide-react';
 import useForm from '@/hooks/useForm';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterContainer() {
+  const router = useRouter();
   const [error, setError] = useState('');
 
   const { form, setForm, handleChange } = useForm({
@@ -24,7 +26,11 @@ export default function RegisterContainer() {
   return (
     <div className="flex flex-col items-center w-full max-w-md">
       <form
-        onSubmit={() => {}}
+        onSubmit={(e) => {
+          e.preventDefault();
+          router.push('/complete-information');
+          router.refresh();
+        }}
         className="bg-white rounded-2xl p-7 w-full"
         style={{ boxShadow: '0px 4px 24px rgba(43,53,47,0.08)' }}
       >
